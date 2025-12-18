@@ -1,72 +1,70 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enquête Scolaire / School Survey / استبيان مدرسي</title>
+    <title>Enquête Scolaire / School Survey</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="lang-selector">
+    <div class="lang-bar">
         <button onclick="setLanguage('fr')">FR</button>
         <button onclick="setLanguage('en')">EN</button>
         <button onclick="setLanguage('ar')">AR</button>
     </div>
 
-    <div class="container" id="survey-container">
+    <div class="container" id="main-content">
         <header>
-            <h1 id="txt-title">Enquête de Satisfaction Scolaire</h1>
-            <p id="txt-subtitle">Votre avis nous aide à grandir</p>
+            <h1 id="txt-title">Chargement...</h1>
+            <p id="txt-subtitle">Chargement...</p>
         </header>
 
         <form id="survey-form">
-            <!-- Infos Parent -->
-            <div class="section">
-                <div class="input-group">
+            <div class="info-section">
+                <div class="input-box">
                     <label id="lbl-parent">Nom du Parent</label>
                     <input type="text" id="parentName" required>
                 </div>
-                <div class="input-group">
+                <div class="input-box">
                     <label id="lbl-student">Nom de l'élève</label>
                     <input type="text" id="studentName" required>
                 </div>
-                <div class="input-group">
-                    <label id="lbl-phone">Numéro de téléphone</label>
-                    <input type="tel" id="phone" required>
+                <div class="input-box">
+                    <label id="lbl-phone">Téléphone</label>
+                    <input type="tel" id="phone" required placeholder="Ex: 0600000000">
                 </div>
             </div>
 
-            <!-- Questions (Générées par JS) -->
             <div id="questions-container"></div>
 
-            <div class="section">
-                <label id="lbl-comment">Commentaires supplémentaires</label>
+            <div class="comment-section">
+                <label id="lbl-comment">Commentaires</label>
                 <textarea id="comments" rows="4"></textarea>
             </div>
 
-            <button type="submit" id="btn-submit" class="btn-main">Envoyer l'enquête</button>
+            <button type="submit" id="btn-submit" class="btn-main">Envoyer</button>
         </form>
     </div>
 
-    <!-- Section Analyse (Cachée par défaut) -->
+    <!-- Section Analyse -->
     <div id="analysis-container" class="container hidden">
-        <h2>Analyse des Résultats</h2>
+        <h2 id="analysis-title">Analyse des Résultats</h2>
         <canvas id="resultsChart"></canvas>
-        <div class="actions">
-            <button onclick="exportToExcel()" class="btn-export">Exporter Excel</button>
-            <button onclick="window.print()" class="btn-export">Générer Rapport (PDF/Word)</button>
+        <div class="export-btns">
+            <button onclick="exportToExcel()" class="btn-export"><i class="fas fa-file-excel"></i> Excel</button>
+            <button onclick="exportToWord()" class="btn-export"><i class="fas fa-file-word"></i> Word</button>
         </div>
     </div>
 
-    <!-- Message de Confirmation -->
+    <!-- Modal de succès (Caché par défaut) -->
     <div id="confirmation-modal" class="modal hidden">
-        <div class="modal-content">
-            <i class="fas fa-check-circle animated-icon"></i>
-            <h2 id="conf-msg">Merci ! Votre réponse a été enregistrée.</h2>
-            <button onclick="location.reload()">Fermer</button>
+        <div class="modal-box">
+            <i class="fas fa-check-circle"></i>
+            <h2 id="conf-msg">Merci !</h2>
+            <button onclick="window.location.reload()" class="btn-main">Fermer</button>
         </div>
     </div>
 
