@@ -1,73 +1,41 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enquête Scolaire / School Survey</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</head>
-<body>
-    <div class="lang-bar">
-        <button onclick="setLanguage('fr')">FR</button>
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('ar')">AR</button>
-    </div>
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
 
-    <div class="container" id="main-content">
-        <header>
-            <h1 id="txt-title">Chargement...</h1>
-            <p id="txt-subtitle">Chargement...</p>
-        </header>
+app.use(cors());
+app.use(express.json());
 
-        <form id="survey-form">
-            <div class="info-section">
-                <div class="input-box">
-                    <label id="lbl-parent">Nom du Parent</label>
-                    <input type="text" id="parentName" required>
-                </div>
-                <div class="input-box">
-                    <label id="lbl-student">Nom de l'élève</label>
-                    <input type="text" id="studentName" required>
-                </div>
-                <div class="input-box">
-                    <label id="lbl-phone">Téléphone</label>
-                    <input type="tel" id="phone" required placeholder="Ex: 0600000000">
-                </div>
-            </div>
+const MONGODB_URI = process.env.MONGODB_URI;
 
-            <div id="questions-container"></div>
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.error(err));
 
-            <div class="comment-section">
-                <label id="lbl-comment">Commentaires</label>
-                <textarea id="comments" rows="4"></textarea>
-            </div>
+const SurveySchema = new mongoose.Schema({
+    parentName: String,
+    studentName: String,
+    phone: String,
+    answers: Object,
+    comments: String,
+    date: { type: Date, default: Date.now }
+});
 
-            <button type="submit" id="btn-submit" class="btn-main">Envoyer</button>
-        </form>
-    </div>
+const Survey = mongoose.model('Survey', SurveySchema);
 
-    <!-- Section Analyse -->
-    <div id="analysis-container" class="container hidden">
-        <h2 id="analysis-title">Analyse des Résultats</h2>
-        <canvas id="resultsChart"></canvas>
-        <div class="export-btns">
-            <button onclick="exportToExcel()" class="btn-export"><i class="fas fa-file-excel"></i> Excel</button>
-            <button onclick="exportToWord()" class="btn-export"><i class="fas fa-file-word"></i> Word</button>
-        </div>
-    </div>
+app.post('/api/submit', async (req, res) => {
+    try {
+        const newSurvey = new Survey(req.body);
+        await newSurvey.save();
+        res.status(201).json({ message: 'Success' });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
 
-    <!-- Modal de succès (Caché par défaut) -->
-    <div id="confirmation-modal" class="modal hidden">
-        <div class="modal-box">
-            <i class="fas fa-check-circle"></i>
-            <h2 id="conf-msg">Merci !</h2>
-            <button onclick="window.location.reload()" class="btn-main">Fermer</button>
-        </div>
-    </div>
+app.get('/api/results', async (req, res) => {
+    try {
+        const results = await Survey.find().sort({ date: -1 });
+        res.status(200).json(results);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
 
-    <script src="script.js"></script>
-</body>
-</html>
+module.exports = app;
