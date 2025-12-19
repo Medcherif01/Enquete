@@ -1,804 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Survey Form</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 700px;
-            width: 100%;
-            padding: 40px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .form-section {
-            margin-bottom: 25px;
-        }
-
-        .form-section.hidden {
-            display: none;
-        }
-
-        .form-section.visible {
-            display: block;
-        }
-
-        .question-container {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-
-        .question-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .question-description {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .options-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-
-        .option-item:hover {
-            background-color: #e8eaf6;
-        }
-
-        .option-item input[type="radio"],
-        .option-item input[type="checkbox"] {
-            margin-top: 4px;
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
-        }
-
-        .option-content {
-            flex: 1;
-        }
-
-        .option-label {
-            font-weight: 500;
-            color: #333;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .option-suggestion {
-            font-size: 12px;
-            color: #888;
-            font-style: italic;
-            margin-top: 3px;
-        }
-
-        .password-section {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .password-section label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .password-section input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ffc107;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        button {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-width: 150px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-reset {
-            background: #e0e0e0;
-            color: #333;
-            min-width: 150px;
-        }
-
-        .btn-reset:hover {
-            background: #d0d0d0;
-        }
-
-        .btn-view-results {
-            background: #4CAF50;
-            color: white;
-            min-width: 150px;
-        }
-
-        .btn-view-results:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
-        }
-
-        .btn-back {
-            background: #2196F3;
-            color: white;
-            min-width: 150px;
-        }
-
-        .btn-back:hover {
-            background: #0b7dda;
-            transform: translateY(-2px);
-        }
-
-        .results-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .result-item {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .result-question {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .result-answer {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .step-indicator {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            button {
-                padding: 10px 20px;
-                font-size: 13px;
-            }
-        }
-    </style>
+    <title>استبيان الرضا - Al-Kawthar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Survey Form Section -->
-        <div id="surveyForm" class="form-section visible">
-            <div class="header">
-                <h1>📋 Customer Satisfaction Survey</h1>
-                <p>Your feedback helps us improve our services</p>
+    <!-- Particles Background -->
+    <div class="particles-bg" id="particles-js"></div>
+    
+    <!-- Main Container -->
+    <div class="container main-card">
+        <!-- Header with Logo -->
+        <header>
+            <div class="logo-circle">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 id="txt-title" class="main-title">استبيان الرضا المدرسي</h1>
+            <p id="txt-subtitle" class="subtitle">رأيكم يهمنا من أجل مستقبل أبنائنا</p>
+            
+            <!-- Language Selector -->
+            <div class="lang-selector">
+                <button onclick="setLanguage('ar')" class="lang-btn" data-lang="ar">
+                    <i class="fas fa-globe"></i> العربية
+                </button>
+                <button onclick="setLanguage('fr')" class="lang-btn" data-lang="fr">
+                    <i class="fas fa-globe"></i> Français
+                </button>
+                <button onclick="setLanguage('en')" class="lang-btn" data-lang="en">
+                    <i class="fas fa-globe"></i> English
+                </button>
+            </div>
+        </header>
+
+        <!-- Survey Form -->
+        <form id="survey-form">
+            <!-- Personal Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-user-circle"></i> <span id="info-title">المعلومات الشخصية</span></h3>
+                
+                <div class="input-group">
+                    <label id="lbl-parent" for="parentName">
+                        <i class="fas fa-user"></i> اسم ولي الأمر
+                    </label>
+                    <input type="text" id="parentName" name="parentName" required>
+                </div>
+
+                <div class="input-group">
+                    <label id="lbl-student" for="studentName">
+                        <i class="fas fa-child"></i> اسم التلميذ(ة)
+                    </label>
+                    <input type="text" id="studentName" name="studentName" required>
+                </div>
+
+                <div class="input-group">
+                    <label id="lbl-phone" for="phone">
+                        <i class="fas fa-phone"></i> رقم الهاتف (إجباري)
+                    </label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9+\-\s()]+">
+                </div>
             </div>
 
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+            <!-- Questions Section -->
+            <div class="questions-section">
+                <h3><i class="fas fa-clipboard-list"></i> <span id="questions-title">الأسئلة</span></h3>
+                <div id="questions-container"></div>
             </div>
 
-            <div class="step-indicator">
-                <span id="currentStep">Question 1</span> of <span id="totalSteps">5</span>
+            <!-- Comments Section -->
+            <div class="input-group">
+                <label id="lbl-comment" for="comments">
+                    <i class="fas fa-comment-dots"></i> ملاحظات إضافية
+                </label>
+                <textarea id="comments" name="comments" rows="4" placeholder="شاركونا رأيكم..."></textarea>
             </div>
 
-            <form id="mainForm">
-                <!-- Question 1 -->
-                <div class="question-container">
-                    <div class="question-title">1. How satisfied are you with our products/services?</div>
-                    <div class="question-description">
-                        Please rate your overall satisfaction with the quality and reliability of our offerings.
-                    </div>
-                    <div class="options-group">
-                        <label class="option-item">
-                            <input type="radio" name="satisfaction" value="very_satisfied" required>
-                            <div class="option-content">
-                                <span class="option-label">Very Satisfied</span>
-                                <span class="option-suggestion">💚 We're thrilled! Share your experience with others</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="satisfaction" value="satisfied">
-                            <div class="option-content">
-                                <span class="option-label">Satisfied</span>
-                                <span class="option-suggestion">😊 Great to hear! Tell us what we did right</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="satisfaction" value="neutral">
-                            <div class="option-content">
-                                <span class="option-label">Neutral</span>
-                                <span class="option-suggestion">😐 We'd love to hear specific suggestions for improvement</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="satisfaction" value="dissatisfied">
-                            <div class="option-content">
-                                <span class="option-label">Dissatisfied</span>
-                                <span class="option-suggestion">😞 We're sorry. Please help us understand what went wrong</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i>
+                <span>إرسال الاستبيان</span>
+            </button>
+        </form>
+    </div>
 
-                <!-- Question 2 -->
-                <div class="question-container">
-                    <div class="question-title">2. How likely are you to recommend us to a friend?</div>
-                    <div class="question-description">
-                        This helps us understand our impact and identify areas for growth.
-                    </div>
-                    <div class="options-group">
-                        <label class="option-item">
-                            <input type="radio" name="recommendation" value="very_likely" required>
-                            <div class="option-content">
-                                <span class="option-label">Very Likely</span>
-                                <span class="option-suggestion">🚀 Excellent! You're our best advocate</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="recommendation" value="likely">
-                            <div class="option-content">
-                                <span class="option-label">Likely</span>
-                                <span class="option-suggestion">✨ Good sign! We appreciate your confidence</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="recommendation" value="unlikely">
-                            <div class="option-content">
-                                <span class="option-label">Unlikely</span>
-                                <span class="option-suggestion">⚠️ Help us understand the concerns</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="recommendation" value="very_unlikely">
-                            <div class="option-content">
-                                <span class="option-label">Very Unlikely</span>
-                                <span class="option-suggestion">🆘 We need to hear your feedback to improve</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Question 3 -->
-                <div class="question-container">
-                    <div class="question-title">3. Which aspects of our service do you value most?</div>
-                    <div class="question-description">
-                        Select all that apply. Understanding your priorities helps us focus our improvements.
-                    </div>
-                    <div class="options-group">
-                        <label class="option-item">
-                            <input type="checkbox" name="aspects" value="quality">
-                            <div class="option-content">
-                                <span class="option-label">Quality</span>
-                                <span class="option-suggestion">⭐ High standards matter to you</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="checkbox" name="aspects" value="price">
-                            <div class="option-content">
-                                <span class="option-label">Price/Value</span>
-                                <span class="option-suggestion">💰 Budget-conscious is important</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="checkbox" name="aspects" value="customer_service">
-                            <div class="option-content">
-                                <span class="option-label">Customer Service</span>
-                                <span class="option-suggestion">👥 Support matters to you</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="checkbox" name="aspects" value="speed">
-                            <div class="option-content">
-                                <span class="option-label">Speed/Efficiency</span>
-                                <span class="option-suggestion">⚡ Time is valuable</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="checkbox" name="aspects" value="innovation">
-                            <div class="option-content">
-                                <span class="option-label">Innovation</span>
-                                <span class="option-suggestion">🔬 You appreciate cutting-edge solutions</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Question 4 -->
-                <div class="question-container">
-                    <div class="question-title">4. How easy was it to use our service?</div>
-                    <div class="question-description">
-                        Usability is crucial for customer satisfaction. Your feedback helps us streamline our experience.
-                    </div>
-                    <div class="options-group">
-                        <label class="option-item">
-                            <input type="radio" name="ease_of_use" value="very_easy" required>
-                            <div class="option-content">
-                                <span class="option-label">Very Easy</span>
-                                <span class="option-suggestion">👍 Intuitive design appreciated!</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="ease_of_use" value="easy">
-                            <div class="option-content">
-                                <span class="option-label">Easy</span>
-                                <span class="option-suggestion">✓ Good user experience</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="ease_of_use" value="difficult">
-                            <div class="option-content">
-                                <span class="option-label">Difficult</span>
-                                <span class="option-suggestion">⚙️ We'll simplify the process</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="ease_of_use" value="very_difficult">
-                            <div class="option-content">
-                                <span class="option-label">Very Difficult</span>
-                                <span class="option-suggestion">🔧 Priority for redesign</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Question 5 -->
-                <div class="question-container">
-                    <div class="question-title">5. What is your main area for improvement?</div>
-                    <div class="question-description">
-                        Help us understand your biggest pain point or the area where we need to focus our efforts.
-                    </div>
-                    <div class="options-group">
-                        <label class="option-item">
-                            <input type="radio" name="improvement" value="features" required>
-                            <div class="option-content">
-                                <span class="option-label">More Features</span>
-                                <span class="option-suggestion">📦 You want more functionality</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="improvement" value="performance">
-                            <div class="option-content">
-                                <span class="option-label">Better Performance</span>
-                                <span class="option-suggestion">⚡ Speed is your priority</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="improvement" value="support">
-                            <div class="option-content">
-                                <span class="option-label">Better Support</span>
-                                <span class="option-suggestion">🤝 You need more help</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="improvement" value="pricing">
-                            <div class="option-content">
-                                <span class="option-label">Better Pricing</span>
-                                <span class="option-suggestion">💵 Cost optimization matters</span>
-                            </div>
-                        </label>
-                        <label class="option-item">
-                            <input type="radio" name="improvement" value="documentation">
-                            <div class="option-content">
-                                <span class="option-label">Better Documentation</span>
-                                <span class="option-suggestion">📚 Clearer guidance needed</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Password Protection -->
-                <div class="password-section">
-                    <label for="resultPassword">Set Password to View Results (Optional)</label>
-                    <input type="password" id="resultPassword" placeholder="Leave empty for no password protection">
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        If set, you'll need this password to view survey results later.
-                    </small>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" class="btn-submit">Submit Survey</button>
-                    <button type="reset" class="btn-reset">Clear Form</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Results Section -->
-        <div id="resultsSection" class="form-section hidden">
-            <div class="header">
-                <h1>✅ Thank You!</h1>
-                <p>Your survey has been submitted successfully</p>
+    <!-- Analytics Container -->
+    <div id="analysis-container" class="container analysis-card hidden">
+        <h2><i class="fas fa-chart-bar"></i> <span id="analytics-title">نتائج التحليل</span></h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-value" id="total-responses">0</div>
+                <div class="stat-label" id="responses-label">مشارك</div>
             </div>
-
-            <div class="success-message">
-                Your responses have been recorded. Your results are protected and can be viewed again with the password.
+            <div class="stat-card">
+                <i class="fas fa-smile"></i>
+                <div class="stat-value" id="avg-satisfaction">0%</div>
+                <div class="stat-label" id="satisfaction-label">رضا عام</div>
             </div>
-
-            <div class="results-section" id="resultsDisplay"></div>
-
-            <div class="password-section">
-                <label for="viewPassword">Password (if one was set):</label>
-                <input type="password" id="viewPassword" placeholder="Enter password to download results">
-            </div>
-
-            <div class="button-group">
-                <button class="btn-view-results" onclick="downloadResults()">📥 Download Results</button>
-                <button class="btn-back" onclick="resetSurvey()">← Start New Survey</button>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <div class="stat-value" id="top-rating">-</div>
+                <div class="stat-label" id="top-label">أعلى تقييم</div>
             </div>
         </div>
 
-        <!-- Password Protected View -->
-        <div id="passwordPrompt" class="form-section hidden">
-            <div class="header">
-                <h1>🔒 View Saved Results</h1>
-                <p>Enter the password to access your survey responses</p>
-            </div>
+        <div class="chart-container">
+            <canvas id="resultsChart"></canvas>
+        </div>
 
-            <div class="password-section">
-                <label for="accessPassword">Password:</label>
-                <input type="password" id="accessPassword" placeholder="Enter password">
-            </div>
+        <!-- Export Buttons -->
+        <div class="export-actions">
+            <button onclick="secureExport('excel')" class="export-btn excel">
+                <i class="fas fa-file-excel"></i>
+                <span id="export-excel-text">تصدير Excel</span>
+            </button>
+            <button onclick="secureExport('word')" class="export-btn word">
+                <i class="fas fa-file-word"></i>
+                <span id="export-word-text">تصدير Word</span>
+            </button>
+        </div>
+    </div>
 
-            <div class="button-group">
-                <button class="btn-view-results" onclick="verifyAndDisplayResults()">Access Results</button>
-                <button class="btn-back" onclick="backToForm()">← Back</button>
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 id="conf-msg">تم تسجيل إجابتكم بنجاح!</h2>
+            <p id="thanks-msg">شكراً لمشاركتكم القيمة</p>
+            <button onclick="closeModal()" class="modal-btn">
+                <i class="fas fa-times"></i> <span id="close-text">إغلاق</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="password-title">
+                <i class="fas fa-lock"></i> أدخل كلمة المرور
+            </h3>
+            <input type="password" id="password-input" class="password-input" placeholder="كلمة المرور">
+            <div class="modal-actions">
+                <button onclick="verifyPassword()" class="modal-btn primary">
+                    <i class="fas fa-check"></i> <span id="confirm-text">تأكيد</span>
+                </button>
+                <button onclick="closePasswordModal()" class="modal-btn secondary">
+                    <i class="fas fa-times"></i> <span id="cancel-text">إلغاء</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <script>
-        // Survey state management
-        let surveyData = {};
-        let surveyPassword = '';
-        let isSurveySubmitted = false;
-
-        // Initialize survey
-        document.getElementById('mainForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitSurvey();
-        });
-
-        function submitSurvey() {
-            // Collect form data
-            const formData = new FormData(document.getElementById('mainForm'));
-            surveyData = {};
-
-            for (let [key, value] of formData.entries()) {
-                if (key === 'aspects') {
-                    if (!surveyData[key]) {
-                        surveyData[key] = [];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
-            }
-
-            surveyPassword = document.getElementById('resultPassword').value;
-            isSurveySubmitted = true;
-
-            // Display results
-            showResults();
-        }
-
-        function showResults() {
-            document.getElementById('surveyForm').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-
-            const resultsDisplay = document.getElementById('resultsDisplay');
-            resultsDisplay.innerHTML = '';
-
-            const questions = {
-                'satisfaction': '1. How satisfied are you with our products/services?',
-                'recommendation': '2. How likely are you to recommend us to a friend?',
-                'aspects': '3. Which aspects of our service do you value most?',
-                'ease_of_use': '4. How easy was it to use our service?',
-                'improvement': '5. What is your main area for improvement?'
-            };
-
-            for (let [key, question] of Object.entries(questions)) {
-                if (surveyData[key]) {
-                    const resultDiv = document.createElement('div');
-                    resultDiv.className = 'result-item';
-                    resultDiv.innerHTML = `
-                        <div class="result-question">${question}</div>
-                        <div class="result-answer">${formatAnswer(surveyData[key])}</div>
-                    `;
-                    resultsDisplay.appendChild(resultDiv);
-                }
-            }
-        }
-
-        function formatAnswer(value) {
-            if (Array.isArray(value)) {
-                return value.map(v => formatAnswerValue(v)).join(', ');
-            }
-            return formatAnswerValue(value);
-        }
-
-        function formatAnswerValue(value) {
-            const labels = {
-                'very_satisfied': 'Very Satisfied',
-                'satisfied': 'Satisfied',
-                'neutral': 'Neutral',
-                'dissatisfied': 'Dissatisfied',
-                'very_likely': 'Very Likely',
-                'likely': 'Likely',
-                'unlikely': 'Unlikely',
-                'very_unlikely': 'Very Unlikely',
-                'quality': 'Quality',
-                'price': 'Price/Value',
-                'customer_service': 'Customer Service',
-                'speed': 'Speed/Efficiency',
-                'innovation': 'Innovation',
-                'very_easy': 'Very Easy',
-                'easy': 'Easy',
-                'difficult': 'Difficult',
-                'very_difficult': 'Very Difficult',
-                'features': 'More Features',
-                'performance': 'Better Performance',
-                'support': 'Better Support',
-                'pricing': 'Better Pricing',
-                'documentation': 'Better Documentation'
-            };
-            return labels[value] || value;
-        }
-
-        function downloadResults() {
-            const password = document.getElementById('viewPassword').value;
-            
-            if (surveyPassword && password !== surveyPassword) {
-                alert('❌ Incorrect password!');
-                return;
-            }
-
-            const csvContent = generateCSV();
-            downloadFile(csvContent, 'survey_results.csv', 'text/csv');
-        }
-
-        function generateCSV() {
-            let csv = 'Survey Results\n';
-            csv += 'Generated: ' + new Date().toLocaleString() + '\n\n';
-            csv += 'Question,Answer\n';
-
-            const questions = {
-                'satisfaction': '1. How satisfied are you with our products/services?',
-                'recommendation': '2. How likely are you to recommend us to a friend?',
-                'aspects': '3. Which aspects of our service do you value most?',
-                'ease_of_use': '4. How easy was it to use our service?',
-                'improvement': '5. What is your main area for improvement?'
-            };
-
-            for (let [key, question] of Object.entries(questions)) {
-                if (surveyData[key]) {
-                    csv += `"${question}","${formatAnswer(surveyData[key])}"\n`;
-                }
-            }
-
-            return csv;
-        }
-
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type: type });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        }
-
-        function resetSurvey() {
-            document.getElementById('mainForm').reset();
-            document.getElementById('resultPassword').value = '';
-            surveyData = {};
-            surveyPassword = '';
-            isSurveySubmitted = false;
-
-            document.getElementById('surveyForm').classList.remove('hidden');
-            document.getElementById('resultsSection').classList.add('hidden');
-        }
-
-        function verifyAndDisplayResults() {
-            const password = document.getElementById('accessPassword').value;
-            
-            if (surveyPassword && password !== surveyPassword) {
-                alert('❌ Incorrect password!');
-                return;
-            }
-
-            document.getElementById('passwordPrompt').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-        }
-
-        function backToForm() {
-            document.getElementById('passwordPrompt').classList.add('hidden');
-            document.getElementById('surveyForm').classList.remove('hidden');
-        }
-
-        // Update progress bar
-        function updateProgress() {
-            const questions = document.querySelectorAll('.question-container');
-            let answered = 0;
-
-            document.querySelectorAll('input[required]').forEach(input => {
-                if (input.type === 'radio') {
-                    const name = input.name;
-                    if (document.querySelector(`input[name="${name}"]:checked`)) {
-                        answered++;
-                    }
-                } else if (input.type === 'checkbox') {
-                    if (input.checked) answered++;
-                }
-            });
-
-            const progress = (answered / document.querySelectorAll('input[required]').length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-        }
-
-        // Update step indicator
-        function updateStepIndicator() {
-            const currentStep = Array.from(document.querySelectorAll('.question-container')).findIndex(q => {
-                const inputs = q.querySelectorAll('input[required]');
-                for (let input of inputs) {
-                    if (input.type === 'radio') {
-                        if (!document.querySelector(`input[name="${input.name}"]:checked`)) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }) + 1;
-
-            document.getElementById('currentStep').textContent = Math.min(currentStep, 5);
-        }
-
-        // Add event listeners for progress tracking
-        document.getElementById('mainForm').addEventListener('change', () => {
-            updateProgress();
-            updateStepIndicator();
-        });
-
-        // Initialize
-        updateProgress();
-        updateStepIndicator();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
