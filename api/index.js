@@ -22,6 +22,21 @@ mongoose.connect(MONGODB_URI, {
 
 // Survey Schema
 const SurveySchema = new mongoose.Schema({
+    parentEmail: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true
+    },
+    programme: {
+        type: String,
+        required: true,
+        enum: ['français', 'britannique', 'américain']
+    },
+    section: {
+        type: String,
+        required: true
+    },
     parentName: {
         type: String,
         required: true,
@@ -63,6 +78,8 @@ const SurveySchema = new mongoose.Schema({
 // Indexes for better performance
 SurveySchema.index({ date: -1 });
 SurveySchema.index({ phone: 1 });
+SurveySchema.index({ programme: 1, section: 1 });
+SurveySchema.index({ parentEmail: 1 });
 
 const Survey = mongoose.model('Survey', SurveySchema);
 
@@ -71,13 +88,31 @@ const Survey = mongoose.model('Survey', SurveySchema);
 // Submit Survey
 app.post('/api/submit', async (req, res) => {
     try {
-        const { parentName, studentName, phone, answers, suggestions, comments } = req.body;
+        const { parentEmail, programme, section, parentName, studentName, phone, answers, suggestions, comments } = req.body;
 
         // Validation
-        if (!parentName || !studentName || !phone || !answers) {
+        if (!parentEmail || !programme || !section || !parentName || !studentName || !phone || !answers) {
             return res.status(400).json({
                 error: 'Missing required fields',
                 message: 'الرجاء ملء جميع الحقول المطلوبة'
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(parentEmail)) {
+            return res.status(400).json({
+                error: 'Invalid email',
+                message: 'البريد الإلكتروني غير صحيح'
+            });
+        }
+
+        // Validate programme
+        const validProgrammes = ['français', 'britannique', 'américain'];
+        if (!validProgrammes.includes(programme.toLowerCase())) {
+            return res.status(400).json({
+                error: 'Invalid programme',
+                message: 'البرنامج غير صحيح'
             });
         }
 
@@ -94,6 +129,9 @@ app.post('/api/submit', async (req, res) => {
 
         // Create new survey entry
         const newSurvey = new Survey({
+            parentEmail: parentEmail.toLowerCase(),
+            programme: programme.toLowerCase(),
+            section,
             parentName,
             studentName,
             phone,
@@ -107,6 +145,9 @@ app.post('/api/submit', async (req, res) => {
         await newSurvey.save();
 
         console.log('✅ New survey submitted:', {
+            email: parentEmail,
+            programme,
+            section,
             parent: parentName,
             student: studentName,
             date: new Date().toISOString()
@@ -130,15 +171,26 @@ app.post('/api/submit', async (req, res) => {
     }
 });
 
-// Get All Results
+// Get All Results (with optional filters)
 app.get('/api/results', async (req, res) => {
     try {
-        const results = await Survey.find()
+        const { programme, section } = req.query;
+        
+        // Build filter query
+        const filter = {};
+        if (programme) {
+            filter.programme = programme.toLowerCase();
+        }
+        if (section) {
+            filter.section = section;
+        }
+
+        const results = await Survey.find(filter)
             .sort({ date: -1 })
             .select('-ipAddress -userAgent -__v')
             .lean();
 
-        console.log(`📊 Retrieved ${results.length} survey results`);
+        console.log(`📊 Retrieved ${results.length} survey results${programme ? ` for ${programme}` : ''}${section ? ` - ${section}` : ''}`);
 
         res.status(200).json(results);
 
@@ -149,6 +201,17 @@ app.get('/api/results', async (req, res) => {
             message: 'فشل في جلب النتائج'
         });
     }
+});
+
+// Get Programmes and Sections
+app.get('/api/sections', (req, res) => {
+    const sections = {
+        français: ['Primaire', 'Secondaire Filles', 'Secondaire Garçons'],
+        britannique: ['Primaire Filles', 'Primaire Garçons', 'Secondaire Filles', 'Secondaire Garçons'],
+        américain: ['Secondaire Filles', 'Secondaire Garçons']
+    };
+    
+    res.status(200).json(sections);
 });
 
 // Get Statistics

@@ -16,6 +16,7 @@ const translations = {
         success: "تم تسجيل إجابتكم بنجاح!",
         thanks: "شكراً لمشاركتكم القيمة",
         close: "إغلاق",
+        surveyFor: "الاستبيان الخاص ب",
         resultsBtn: "عرض النتائج",
         exportExcel: "تصدير Excel",
         exportWord: "تصدير Word",
@@ -77,6 +78,7 @@ const translations = {
         success: "Enregistré avec succès !",
         thanks: "Merci pour votre précieuse participation",
         close: "Fermer",
+        surveyFor: "Enquête pour",
         resultsBtn: "Voir les Résultats",
         exportExcel: "Exporter Excel",
         exportWord: "Exporter Word",
@@ -138,6 +140,7 @@ const translations = {
         success: "Submitted successfully!",
         thanks: "Thank you for your valuable participation",
         close: "Close",
+        surveyFor: "Survey for",
         resultsBtn: "View Results",
         exportExcel: "Export Excel",
         exportWord: "Export Word",
@@ -218,6 +221,7 @@ function setLanguage(lang) {
     document.getElementById('thanks-msg').innerText = t.thanks;
     document.getElementById('close-text').innerText = t.close;
     document.getElementById('results-btn-text').innerText = t.resultsBtn;
+    document.getElementById('survey-for-label').innerText = t.surveyFor;
 
     // Regenerate questions
     const container = document.getElementById('questions-container');
@@ -270,6 +274,9 @@ document.getElementById('survey-form').onsubmit = async (e) => {
     }
 
     const payload = {
+        parentEmail: sessionStorage.getItem('surveyEmail'),
+        programme: sessionStorage.getItem('surveyProgramme'),
+        section: sessionStorage.getItem('surveySection'),
         parentName: document.getElementById('parentName').value.trim(),
         studentName: document.getElementById('studentName').value.trim(),
         phone: document.getElementById('phone').value.trim(),
@@ -305,5 +312,29 @@ function closeModal() {
     document.getElementById('confirmation-modal').classList.add('hidden');
 }
 
+// Check for session data and redirect if missing
+function checkSession() {
+    const email = sessionStorage.getItem('surveyEmail');
+    const programme = sessionStorage.getItem('surveyProgramme');
+    const section = sessionStorage.getItem('surveySection');
+    
+    if (!email || !programme || !section) {
+        // Redirect to selection page
+        window.location.href = 'select-section.html';
+        return false;
+    }
+    
+    // Display selected info
+    document.getElementById('section-info').style.display = 'block';
+    document.getElementById('selected-programme').innerText = programme.charAt(0).toUpperCase() + programme.slice(1);
+    document.getElementById('selected-section').innerText = section;
+    document.getElementById('selected-email').innerText = email;
+    
+    return true;
+}
+
 // Initialize with Arabic language
 setLanguage('ar');
+
+// Check session on page load
+checkSession();

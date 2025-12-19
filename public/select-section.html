@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار البرنامج والقسم - Al-Kawthar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        .selection-container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        
+        .programme-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .programme-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .programme-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: var(--primary);
+        }
+        
+        .programme-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(26, 42, 108, 0.05), rgba(178, 31, 31, 0.05));
+        }
+        
+        .programme-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .programme-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .section-selection {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .section-selection.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .section-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .section-btn {
+            padding: 20px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .section-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .section-btn.selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .email-section {
+            display: none;
+            margin-top: 40px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .email-section.show {
+            display: block;
+        }
+        
+        .email-input-group {
+            margin: 20px 0;
+        }
+        
+        .email-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-family: 'Cairo', sans-serif;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .email-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(26, 42, 108, 0.2);
+        }
+        
+        .continue-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            margin-top: 30px;
+        }
+        
+        .continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(26, 42, 108, 0.4);
+        }
+        
+        .continue-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.2);
+        }
+        
+        .step.completed {
+            background: var(--success);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles-bg" id="particles-js"></div>
+    
+    <!-- Selection Container -->
+    <div class="container selection-container">
+        <!-- Header with Logo -->
+        <header>
+            <div class="logo-circle">
+                <img src="logo-alkawthar.png" alt="Al-Kawthar Logo" class="school-logo">
+            </div>
+            <h1 id="txt-title" class="main-title">استبيان الرضا المدرسي</h1>
+            <p id="txt-subtitle" class="subtitle">اختر البرنامج والقسم الخاص بك</p>
+            
+            <!-- Language Selector -->
+            <div class="lang-selector">
+                <button onclick="setLanguage('ar')" class="lang-btn active" data-lang="ar">
+                    <i class="fas fa-globe"></i> العربية
+                </button>
+                <button onclick="setLanguage('fr')" class="lang-btn" data-lang="fr">
+                    <i class="fas fa-globe"></i> Français
+                </button>
+                <button onclick="setLanguage('en')" class="lang-btn" data-lang="en">
+                    <i class="fas fa-globe"></i> English
+                </button>
+            </div>
+        </header>
+        
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+        
+        <!-- Programme Selection -->
+        <div id="programme-selection">
+            <h2 id="select-programme-title" style="text-align: center; color: var(--primary); margin-bottom: 30px;">
+                <i class="fas fa-book"></i> اختر البرنامج التعليمي
+            </h2>
+            
+            <div class="programme-cards">
+                <div class="programme-card" onclick="selectProgramme('français')">
+                    <div class="programme-icon">🇫🇷</div>
+                    <div class="programme-name" id="prog-french">البرنامج الفرنسي</div>
+                    <p id="prog-french-desc">Programme Français</p>
+                </div>
+                
+                <div class="programme-card" onclick="selectProgramme('britannique')">
+                    <div class="programme-icon">🇬🇧</div>
+                    <div class="programme-name" id="prog-british">البرنامج البريطاني</div>
+                    <p id="prog-british-desc">British Programme</p>
+                </div>
+                
+                <div class="programme-card" onclick="selectProgramme('américain')">
+                    <div class="programme-icon">🇺🇸</div>
+                    <div class="programme-name" id="prog-american">البرنامج الأمريكي</div>
+                    <p id="prog-american-desc">American Programme</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section Selection -->
+        <div id="section-selection" class="section-selection">
+            <h2 id="select-section-title" style="text-align: center; color: var(--primary); margin-bottom: 20px;">
+                <i class="fas fa-users"></i> اختر القسم
+            </h2>
+            <div id="section-buttons" class="section-buttons"></div>
+        </div>
+        
+        <!-- Email Input -->
+        <div id="email-section" class="email-section">
+            <h2 id="email-title" style="text-align: center; color: var(--primary); margin-bottom: 20px;">
+                <i class="fas fa-envelope"></i> البريد الإلكتروني
+            </h2>
+            <div class="email-input-group">
+                <label for="parent-email" id="email-label" style="display: block; margin-bottom: 10px; font-weight: 600;">
+                    أدخل بريدك الإلكتروني
+                </label>
+                <input 
+                    type="email" 
+                    id="parent-email" 
+                    class="email-input" 
+                    placeholder="example@email.com"
+                    required
+                >
+            </div>
+            
+            <button id="continue-btn" class="continue-btn" onclick="continueToSurvey()" disabled>
+                <i class="fas fa-arrow-left"></i>
+                <span id="continue-text">المتابعة إلى الاستبيان</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'ar';
+        let selectedProgramme = null;
+        let selectedSection = null;
+        
+        const translations = {
+            ar: {
+                title: 'استبيان الرضا المدرسي',
+                subtitle: 'اختر البرنامج والقسم الخاص بك',
+                selectProgramme: 'اختر البرنامج التعليمي',
+                selectSection: 'اختر القسم',
+                emailTitle: 'البريد الإلكتروني',
+                emailLabel: 'أدخل بريدك الإلكتروني',
+                continue: 'المتابعة إلى الاستبيان',
+                progFrench: 'البرنامج الفرنسي',
+                progBritish: 'البرنامج البريطاني',
+                progAmerican: 'البرنامج الأمريكي'
+            },
+            fr: {
+                title: 'Enquête de Satisfaction',
+                subtitle: 'Choisissez votre programme et section',
+                selectProgramme: 'Choisissez le programme scolaire',
+                selectSection: 'Choisissez la section',
+                emailTitle: 'Adresse e-mail',
+                emailLabel: 'Entrez votre adresse e-mail',
+                continue: 'Continuer vers l\'enquête',
+                progFrench: 'Programme Français',
+                progBritish: 'Programme Britannique',
+                progAmerican: 'Programme Américain'
+            },
+            en: {
+                title: 'Satisfaction Survey',
+                subtitle: 'Choose your program and section',
+                selectProgramme: 'Choose the educational program',
+                selectSection: 'Choose the section',
+                emailTitle: 'Email Address',
+                emailLabel: 'Enter your email address',
+                continue: 'Continue to Survey',
+                progFrench: 'French Program',
+                progBritish: 'British Program',
+                progAmerican: 'American Program'
+            }
+        };
+        
+        const sections = {
+            français: ['Primaire', 'Secondaire Filles', 'Secondaire Garçons'],
+            britannique: ['Primaire Filles', 'Primaire Garçons', 'Secondaire Filles', 'Secondaire Garçons'],
+            américain: ['Secondaire Filles', 'Secondaire Garçons']
+        };
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            document.documentElement.lang = lang;
+            document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(`'${lang}'`)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('select-programme-title').innerHTML = `<i class="fas fa-book"></i> ${t.selectProgramme}`;
+            document.getElementById('select-section-title').innerHTML = `<i class="fas fa-users"></i> ${t.selectSection}`;
+            document.getElementById('email-title').innerHTML = `<i class="fas fa-envelope"></i> ${t.emailTitle}`;
+            document.getElementById('email-label').innerText = t.emailLabel;
+            document.getElementById('continue-text').innerText = t.continue;
+            document.getElementById('prog-french').innerText = t.progFrench;
+            document.getElementById('prog-british').innerText = t.progBritish;
+            document.getElementById('prog-american').innerText = t.progAmerican;
+        }
+        
+        function selectProgramme(programme) {
+            selectedProgramme = programme;
+            
+            // Update UI
+            document.querySelectorAll('.programme-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update steps
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            
+            // Show sections
+            const sectionDiv = document.getElementById('section-selection');
+            const buttonsDiv = document.getElementById('section-buttons');
+            
+            buttonsDiv.innerHTML = '';
+            sections[programme].forEach(section => {
+                const btn = document.createElement('button');
+                btn.className = 'section-btn';
+                btn.innerText = section;
+                btn.onclick = () => selectSection(section);
+                buttonsDiv.appendChild(btn);
+            });
+            
+            sectionDiv.classList.add('show');
+            sectionDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function selectSection(section) {
+            selectedSection = section;
+            
+            // Update UI
+            document.querySelectorAll('.section-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update steps
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+            
+            // Show email section
+            document.getElementById('email-section').classList.add('show');
+            document.getElementById('email-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Enable continue button when email is valid
+        document.getElementById('parent-email').addEventListener('input', function(e) {
+            const email = e.target.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const continueBtn = document.getElementById('continue-btn');
+            
+            if (emailRegex.test(email) && selectedProgramme && selectedSection) {
+                continueBtn.disabled = false;
+            } else {
+                continueBtn.disabled = true;
+            }
+        });
+        
+        function continueToSurvey() {
+            const email = document.getElementById('parent-email').value;
+            
+            if (!email || !selectedProgramme || !selectedSection) {
+                alert(currentLang === 'ar' ? 'الرجاء إكمال جميع الخطوات' : 
+                      currentLang === 'fr' ? 'Veuillez compléter toutes les étapes' : 
+                      'Please complete all steps');
+                return;
+            }
+            
+            // Save to sessionStorage
+            sessionStorage.setItem('surveyEmail', email);
+            sessionStorage.setItem('surveyProgramme', selectedProgramme);
+            sessionStorage.setItem('surveySection', selectedSection);
+            
+            // Redirect to survey
+            window.location.href = 'index.html';
+        }
+        
+        // Initialize
+        setLanguage('ar');
+    </script>
+</body>
+</html>

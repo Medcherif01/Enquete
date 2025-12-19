@@ -14,6 +14,11 @@ const translations = {
         exportWord: "تصدير Word",
         errorMsg: "كلمة المرور غير صحيحة!",
         backLink: "العودة للاستبيان",
+        filterTitle: "تصفية النتائج حسب البرنامج والقسم",
+        programmeLabel: "البرنامج:",
+        sectionLabel: "القسم:",
+        allOption: "الكل",
+        applyFilter: "تطبيق التصفية",
         parent: "اسم ولي الأمر",
         student: "اسم التلميذ(ة)",
         phone: "رقم الهاتف",
@@ -52,6 +57,11 @@ const translations = {
         exportWord: "Exporter Word",
         errorMsg: "Mot de passe incorrect !",
         backLink: "Retour à l'enquête",
+        filterTitle: "Filtrer les résultats par programme et section",
+        programmeLabel: "Programme :",
+        sectionLabel: "Section :",
+        allOption: "Tous",
+        applyFilter: "Appliquer le filtre",
         parent: "Nom du Parent",
         student: "Nom de l'élève",
         phone: "Numéro de Téléphone",
@@ -90,6 +100,11 @@ const translations = {
         exportWord: "Export Word",
         errorMsg: "Wrong password!",
         backLink: "Back to survey",
+        filterTitle: "Filter results by program and section",
+        programmeLabel: "Program:",
+        sectionLabel: "Section:",
+        allOption: "All",
+        applyFilter: "Apply Filter",
         parent: "Parent Name",
         student: "Student Name",
         phone: "Phone Number",
@@ -719,3 +734,40 @@ async function exportWord() {
               'Export error');
     }
 }
+
+// Section filter management
+const sections = {
+    français: ['Primaire', 'Secondaire Filles', 'Secondaire Garçons'],
+    britannique: ['Primaire Filles', 'Primaire Garçons', 'Secondaire Filles', 'Secondaire Garçons'],
+    américain: ['Secondaire Filles', 'Secondaire Garçons']
+};
+
+let currentFilter = { programme: '', section: '' };
+
+function updateSectionFilter() {
+    const programme = document.getElementById('filter-programme').value;
+    const sectionSelect = document.getElementById('filter-section');
+    const t = translations[currentLang];
+    
+    sectionSelect.innerHTML = `<option value="">${t.allOption}</option>`;
+    
+    if (programme && sections[programme]) {
+        sections[programme].forEach(section => {
+            const option = document.createElement('option');
+            option.value = section;
+            option.textContent = section;
+            sectionSelect.appendChild(option);
+        });
+    }
+}
+
+function applyFilter() {
+    currentFilter.programme = document.getElementById('filter-programme').value;
+    currentFilter.section = document.getElementById('filter-section').value;
+    loadResults();
+}
+
+// Initialize filters on page load (extend existing DOMContentLoaded)
+window.addEventListener('load', function() {
+    updateSectionFilter();
+});
