@@ -626,6 +626,11 @@ async function exportWord() {
             </head>
             <body>
                 <div class="header">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 120px; height: 120px; margin: 0 auto 15px; background: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 4px solid #1a2a6c; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+                            <span style="font-size: 48px; color: #1a2a6c; font-weight: bold;">AK</span>
+                        </div>
+                    </div>
                     <h1>🎓 ${t.resultsTitle}</h1>
                     <p class="date-info">
                         ${currentLang === 'ar' ? 'تاريخ التقرير' : currentLang === 'fr' ? 'Date du rapport' : 'Report Date'}: 
