@@ -1,41 +1,164 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const app = express();
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان الرضا - Al-Kawthar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles-bg" id="particles-js"></div>
+    
+    <!-- Main Container -->
+    <div class="container main-card">
+        <!-- Header with Logo -->
+        <header>
+            <div class="logo-circle">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 id="txt-title" class="main-title">استبيان الرضا المدرسي</h1>
+            <p id="txt-subtitle" class="subtitle">رأيكم يهمنا من أجل مستقبل أبنائنا</p>
+            
+            <!-- Language Selector -->
+            <div class="lang-selector">
+                <button onclick="setLanguage('ar')" class="lang-btn" data-lang="ar">
+                    <i class="fas fa-globe"></i> العربية
+                </button>
+                <button onclick="setLanguage('fr')" class="lang-btn" data-lang="fr">
+                    <i class="fas fa-globe"></i> Français
+                </button>
+                <button onclick="setLanguage('en')" class="lang-btn" data-lang="en">
+                    <i class="fas fa-globe"></i> English
+                </button>
+            </div>
+        </header>
 
-app.use(cors());
-app.use(express.json());
+        <!-- Survey Form -->
+        <form id="survey-form">
+            <!-- Personal Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-user-circle"></i> <span id="info-title">المعلومات الشخصية</span></h3>
+                
+                <div class="input-group">
+                    <label id="lbl-parent" for="parentName">
+                        <i class="fas fa-user"></i> اسم ولي الأمر
+                    </label>
+                    <input type="text" id="parentName" name="parentName" required>
+                </div>
 
-const MONGODB_URI = process.env.MONGODB_URI;
+                <div class="input-group">
+                    <label id="lbl-student" for="studentName">
+                        <i class="fas fa-child"></i> اسم التلميذ(ة)
+                    </label>
+                    <input type="text" id="studentName" name="studentName" required>
+                </div>
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.error(err));
+                <div class="input-group">
+                    <label id="lbl-phone" for="phone">
+                        <i class="fas fa-phone"></i> رقم الهاتف (إجباري)
+                    </label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9+\-\s()]+">
+                </div>
+            </div>
 
-const SurveySchema = new mongoose.Schema({
-    parentName: String,
-    studentName: String,
-    phone: String,
-    answers: Object,
-    comments: String,
-    date: { type: Date, default: Date.now }
-});
+            <!-- Questions Section -->
+            <div class="questions-section">
+                <h3><i class="fas fa-clipboard-list"></i> <span id="questions-title">الأسئلة</span></h3>
+                <div id="questions-container"></div>
+            </div>
 
-const Survey = mongoose.model('Survey', SurveySchema);
+            <!-- Comments Section -->
+            <div class="input-group">
+                <label id="lbl-comment" for="comments">
+                    <i class="fas fa-comment-dots"></i> ملاحظات إضافية
+                </label>
+                <textarea id="comments" name="comments" rows="4" placeholder="شاركونا رأيكم..."></textarea>
+            </div>
 
-app.post('/api/submit', async (req, res) => {
-    try {
-        const newSurvey = new Survey(req.body);
-        await newSurvey.save();
-        res.status(201).json({ message: 'Success' });
-    } catch (err) { res.status(500).json({ error: err.message }); }
-});
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i>
+                <span>إرسال الاستبيان</span>
+            </button>
+        </form>
+    </div>
 
-app.get('/api/results', async (req, res) => {
-    try {
-        const results = await Survey.find().sort({ date: -1 });
-        res.status(200).json(results);
-    } catch (err) { res.status(500).json({ error: err.message }); }
-});
+    <!-- Analytics Container -->
+    <div id="analysis-container" class="container analysis-card hidden">
+        <h2><i class="fas fa-chart-bar"></i> <span id="analytics-title">نتائج التحليل</span></h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-value" id="total-responses">0</div>
+                <div class="stat-label" id="responses-label">مشارك</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-smile"></i>
+                <div class="stat-value" id="avg-satisfaction">0%</div>
+                <div class="stat-label" id="satisfaction-label">رضا عام</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <div class="stat-value" id="top-rating">-</div>
+                <div class="stat-label" id="top-label">أعلى تقييم</div>
+            </div>
+        </div>
 
-module.exports = app;
+        <div class="chart-container">
+            <canvas id="resultsChart"></canvas>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="export-actions">
+            <button onclick="secureExport('excel')" class="export-btn excel">
+                <i class="fas fa-file-excel"></i>
+                <span id="export-excel-text">تصدير Excel</span>
+            </button>
+            <button onclick="secureExport('word')" class="export-btn word">
+                <i class="fas fa-file-word"></i>
+                <span id="export-word-text">تصدير Word</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 id="conf-msg">تم تسجيل إجابتكم بنجاح!</h2>
+            <p id="thanks-msg">شكراً لمشاركتكم القيمة</p>
+            <button onclick="closeModal()" class="modal-btn">
+                <i class="fas fa-times"></i> <span id="close-text">إغلاق</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="password-title">
+                <i class="fas fa-lock"></i> أدخل كلمة المرور
+            </h3>
+            <input type="password" id="password-input" class="password-input" placeholder="كلمة المرور">
+            <div class="modal-actions">
+                <button onclick="verifyPassword()" class="modal-btn primary">
+                    <i class="fas fa-check"></i> <span id="confirm-text">تأكيد</span>
+                </button>
+                <button onclick="closePasswordModal()" class="modal-btn secondary">
+                    <i class="fas fa-times"></i> <span id="cancel-text">إلغاء</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
