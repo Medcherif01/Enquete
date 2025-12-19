@@ -41,6 +41,10 @@ const SurveySchema = new mongoose.Schema({
         type: Object,
         required: true
     },
+    suggestions: {
+        type: Object,
+        default: {}
+    },
     comments: {
         type: String,
         default: '',
@@ -67,7 +71,7 @@ const Survey = mongoose.model('Survey', SurveySchema);
 // Submit Survey
 app.post('/api/submit', async (req, res) => {
     try {
-        const { parentName, studentName, phone, answers, comments } = req.body;
+        const { parentName, studentName, phone, answers, suggestions, comments } = req.body;
 
         // Validation
         if (!parentName || !studentName || !phone || !answers) {
@@ -94,6 +98,7 @@ app.post('/api/submit', async (req, res) => {
             studentName,
             phone,
             answers,
+            suggestions: suggestions || {},
             comments: comments || '',
             ipAddress: req.ip || req.connection.remoteAddress,
             userAgent: req.headers['user-agent']
