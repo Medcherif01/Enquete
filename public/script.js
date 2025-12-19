@@ -12,11 +12,18 @@ const translations = {
         comment: "ملاحظات إضافية",
         submit: "إرسال الاستبيان",
         options: ["غير راضٍ", "راضٍ", "راضٍ جداً"],
-        suggestionPlaceholder: "اكتب اقتراحاتك هنا (اختياري)...",
         success: "تم تسجيل إجابتكم بنجاح!",
         thanks: "شكراً لمشاركتكم القيمة",
         close: "إغلاق",
-
+        exportExcel: "تصدير Excel",
+        exportWord: "تصدير Word",
+        passwordTitle: "أدخل كلمة المرور",
+        confirm: "تأكيد",
+        cancel: "إلغاء",
+        wrongPassword: "كلمة مرور خاطئة!",
+        responsesLabel: "مشارك",
+        satisfactionLabel: "رضا عام",
+        topLabel: "أعلى تقييم",
         questions: [
             "جودة التدريس الأكاديمي",
             "توافر المعلمين وتواصلهم",
@@ -33,23 +40,6 @@ const translations = {
             "احترام المواعيد والدقة",
             "علاقة الإدارة بالأولياء",
             "القيمة مقابل السعر"
-        ],
-        questionDetails: [
-            "مثال: طرق الشرح، فهم المادة، مستوى التحصيل الدراسي، كفاءة المعلمين",
-            "مثال: سهولة التواصل مع المعلمين، توفرهم للمساعدة، الرد على الاستفسارات",
-            "مثال: سرعة الإجراءات، التعاون، معالجة الطلبات، استقبال الزوار",
-            "مثال: نظافة الفصول، المراحيض، الساحات، صيانة المرافق",
-            "مثال: الإشراف أثناء الفسح، الدخول والخروج، الحماية داخل المدرسة",
-            "مثال: جودة الطعام، التنوع، النظافة، الكمية المناسبة",
-            "مثال: الأنشطة الرياضية، الثقافية، الفنية، الرحلات المدرسية",
-            "مثال: التواصل حول النتائج، الاجتماعات الفردية، تقارير التقدم",
-            "مثال: أجهزة الحاسوب، المختبرات العلمية، الوسائل التعليمية الحديثة",
-            "مثال: احترام القواعد، سلوك الطلاب، التعامل مع المشاكل السلوكية",
-            "مثال: الشعور بالراحة، العلاقات بين الطلاب، الدعم النفسي",
-            "مثال: جودة الكتب المدرسية، المراجع، الأدوات التعليمية المساعدة",
-            "مثال: الالتزام بأوقات البدء والانتهاء، تنظيم الحصص، احترام الجدول الزمني",
-            "مثال: سهولة التواصل مع الإدارة، الاستماع للملاحظات، الشفافية",
-            "مثال: مقارنة الجودة بالسعر، الخدمات مقابل الرسوم المدرسية"
         ]
     },
     fr: {
@@ -64,11 +54,18 @@ const translations = {
         comment: "Commentaires Additionnels",
         submit: "Envoyer l'enquête",
         options: ["Insatisfait", "Satisfait", "Très Satisfait"],
-        suggestionPlaceholder: "Écrivez vos suggestions ici (optionnel)...",
         success: "Enregistré avec succès !",
         thanks: "Merci pour votre précieuse participation",
         close: "Fermer",
-
+        exportExcel: "Exporter Excel",
+        exportWord: "Exporter Word",
+        passwordTitle: "Entrez le mot de passe",
+        confirm: "Confirmer",
+        cancel: "Annuler",
+        wrongPassword: "Mot de passe incorrect !",
+        responsesLabel: "Participants",
+        satisfactionLabel: "Satisfaction Générale",
+        topLabel: "Meilleure Note",
         questions: [
             "Qualité académique",
             "Disponibilité des enseignants",
@@ -85,23 +82,6 @@ const translations = {
             "Respect des horaires",
             "Relation parents-admin",
             "Rapport qualité-prix"
-        ],
-        questionDetails: [
-            "Exemple: méthodes d'enseignement, compréhension du contenu, niveau académique, compétence des enseignants",
-            "Exemple: facilité de contact, disponibilité pour aide, réponses aux questions",
-            "Exemple: rapidité des procédures, coopération, traitement des demandes, accueil",
-            "Exemple: propreté des classes, toilettes, cours, maintenance des installations",
-            "Exemple: supervision durant récréation, entrée/sortie, protection dans l'école",
-            "Exemple: qualité des repas, variété, propreté, quantités appropriées",
-            "Exemple: activités sportives, culturelles, artistiques, sorties scolaires",
-            "Exemple: communication sur résultats, réunions individuelles, rapports de progrès",
-            "Exemple: ordinateurs, laboratoires scientifiques, équipements pédagogiques modernes",
-            "Exemple: respect des règles, comportement des élèves, gestion des problèmes",
-            "Exemple: sentiment de confort, relations entre élèves, soutien psychologique",
-            "Exemple: qualité des manuels, références, outils pédagogiques complémentaires",
-            "Exemple: respect des horaires début/fin, organisation des cours, respect du planning",
-            "Exemple: facilité de contact avec l'administration, écoute des remarques, transparence",
-            "Exemple: qualité comparée au prix, services par rapport aux frais scolaires"
         ]
     },
     en: {
@@ -116,11 +96,18 @@ const translations = {
         comment: "Additional Comments",
         submit: "Submit Survey",
         options: ["Unsatisfied", "Satisfied", "Very Satisfied"],
-        suggestionPlaceholder: "Write your suggestions here (optional)...",
         success: "Submitted successfully!",
         thanks: "Thank you for your valuable participation",
         close: "Close",
-
+        exportExcel: "Export Excel",
+        exportWord: "Export Word",
+        passwordTitle: "Enter Password",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        wrongPassword: "Wrong password!",
+        responsesLabel: "Participants",
+        satisfactionLabel: "Overall Satisfaction",
+        topLabel: "Top Rating",
         questions: [
             "Academic Quality",
             "Teacher Availability",
@@ -137,28 +124,13 @@ const translations = {
             "Punctuality",
             "Parent-Admin Relation",
             "Value for Money"
-        ],
-        questionDetails: [
-            "Example: teaching methods, content understanding, academic level, teacher competence",
-            "Example: ease of contact, availability for help, response to questions",
-            "Example: procedure speed, cooperation, request handling, reception",
-            "Example: classroom cleanliness, restrooms, yards, facility maintenance",
-            "Example: supervision during breaks, entry/exit, protection inside school",
-            "Example: food quality, variety, cleanliness, appropriate quantities",
-            "Example: sports, cultural, artistic activities, school trips",
-            "Example: communication about results, individual meetings, progress reports",
-            "Example: computers, science labs, modern educational equipment",
-            "Example: rule respect, student behavior, problem handling",
-            "Example: comfort feeling, student relationships, psychological support",
-            "Example: textbook quality, references, supplementary educational tools",
-            "Example: start/end time respect, class organization, schedule adherence",
-            "Example: ease of admin contact, listening to feedback, transparency",
-            "Example: quality vs price, services compared to school fees"
         ]
     }
 };
 
 let currentLang = 'ar';
+let chartInstance = null;
+let pendingExportType = null;
 
 // Set Language Function
 function setLanguage(lang) {
@@ -190,6 +162,24 @@ function setLanguage(lang) {
     document.getElementById('conf-msg').innerText = t.success;
     document.getElementById('thanks-msg').innerText = t.thanks;
     document.getElementById('close-text').innerText = t.close;
+    document.getElementById('export-excel-text').innerText = t.exportExcel;
+    document.getElementById('export-word-text').innerText = t.exportWord;
+    document.getElementById('password-title').innerHTML = `<i class="fas fa-lock"></i> ${t.passwordTitle}`;
+    document.getElementById('confirm-text').innerText = t.confirm;
+    document.getElementById('cancel-text').innerText = t.cancel;
+    
+    if (document.getElementById('analytics-title')) {
+        document.getElementById('analytics-title').innerText = t.analyticsTitle;
+    }
+    if (document.getElementById('responses-label')) {
+        document.getElementById('responses-label').innerText = t.responsesLabel;
+    }
+    if (document.getElementById('satisfaction-label')) {
+        document.getElementById('satisfaction-label').innerText = t.satisfactionLabel;
+    }
+    if (document.getElementById('top-label')) {
+        document.getElementById('top-label').innerText = t.topLabel;
+    }
 
     // Regenerate questions
     const container = document.getElementById('questions-container');
@@ -200,7 +190,6 @@ function setLanguage(lang) {
         div.className = 'question-block';
         div.innerHTML = `
             <label><strong>${index + 1}. ${question}</strong></label>
-            <p class="question-detail">${t.questionDetails[index]}</p>
             <div class="options-group">
                 ${t.options.map((option, value) => `
                     <label>
@@ -209,7 +198,6 @@ function setLanguage(lang) {
                     </label>
                 `).join('')}
             </div>
-            <textarea class="suggestion-input" name="suggestion_q${index}" placeholder="${t.suggestionPlaceholder}" rows="2"></textarea>
         `;
         container.appendChild(div);
     });
@@ -219,9 +207,8 @@ function setLanguage(lang) {
 document.getElementById('survey-form').onsubmit = async (e) => {
     e.preventDefault();
     
-    // Collect answers and suggestions
+    // Collect answers
     const answers = {};
-    const suggestions = {};
     const t = translations[currentLang];
     
     for (let i = 0; i < t.questions.length; i++) {
@@ -233,12 +220,6 @@ document.getElementById('survey-form').onsubmit = async (e) => {
             return;
         }
         answers[`q${i}`] = parseInt(selected.value);
-        
-        // Collect suggestion for this question
-        const suggestionInput = document.querySelector(`textarea[name="suggestion_q${i}"]`);
-        if (suggestionInput && suggestionInput.value.trim()) {
-            suggestions[`q${i}`] = suggestionInput.value.trim();
-        }
     }
 
     const payload = {
@@ -246,8 +227,7 @@ document.getElementById('survey-form').onsubmit = async (e) => {
         studentName: document.getElementById('studentName').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         comments: document.getElementById('comments').value.trim(),
-        answers,
-        suggestions
+        answers
     };
 
     try {
@@ -260,7 +240,7 @@ document.getElementById('survey-form').onsubmit = async (e) => {
         if (res.ok) {
             document.getElementById('confirmation-modal').classList.remove('hidden');
             document.getElementById('survey-form').reset();
-            // Removed loadAnalytics() - results not shown in main interface
+            loadAnalytics();
         } else {
             throw new Error('Submission failed');
         }
@@ -272,10 +252,366 @@ document.getElementById('survey-form').onsubmit = async (e) => {
     }
 };
 
+// Load Analytics
+async function loadAnalytics() {
+    try {
+        const res = await fetch('/api/results');
+        const data = await res.json();
+        
+        if (data.length === 0) return;
+
+        document.getElementById('analysis-container').classList.remove('hidden');
+        
+        const t = translations[currentLang];
+        const numQuestions = t.questions.length;
+        
+        // Calculate statistics
+        const sums = new Array(numQuestions).fill(0);
+        data.forEach(d => {
+            for (let i = 0; i < numQuestions; i++) {
+                sums[i] += parseInt(d.answers[`q${i}`] || 0);
+            }
+        });
+        
+        const averages = sums.map(s => ((s / (data.length * 2)) * 100).toFixed(1));
+        const overallSatisfaction = (averages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / numQuestions).toFixed(1);
+        const topRating = Math.max(...averages).toFixed(1);
+        const topIndex = averages.indexOf(Math.max(...averages).toString());
+
+        // Update stats
+        document.getElementById('total-responses').innerText = data.length;
+        document.getElementById('avg-satisfaction').innerText = overallSatisfaction + '%';
+        document.getElementById('top-rating').innerText = `Q${topIndex + 1} (${topRating}%)`;
+
+        // Create/Update Chart
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: t.questions.map((q, i) => `Q${i + 1}`),
+                datasets: [{
+                    label: t.satisfactionLabel,
+                    data: averages,
+                    backgroundColor: 'rgba(26, 42, 108, 0.8)',
+                    borderColor: 'rgba(178, 31, 31, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: 'rgba(178, 31, 31, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14,
+                                family: 'Cairo'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: {
+                            size: 14,
+                            family: 'Cairo'
+                        },
+                        bodyFont: {
+                            size: 13,
+                            family: 'Cairo'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return t.questions[context.dataIndex] + ': ' + context.parsed.y.toFixed(1) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            font: {
+                                size: 12,
+                                family: 'Cairo'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11,
+                                family: 'Cairo'
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+    }
+}
+
 // Modal Functions
 function closeModal() {
     document.getElementById('confirmation-modal').classList.add('hidden');
 }
 
+function closePasswordModal() {
+    document.getElementById('password-modal').classList.add('hidden');
+    document.getElementById('password-input').value = '';
+    pendingExportType = null;
+}
+
+// Secure Export
+function secureExport(type) {
+    pendingExportType = type;
+    document.getElementById('password-modal').classList.remove('hidden');
+    document.getElementById('password-input').focus();
+}
+
+// Verify Password
+function verifyPassword() {
+    const password = document.getElementById('password-input').value;
+    const correctPassword = 'Alkawthar@2025';
+    
+    if (password === correctPassword) {
+        closePasswordModal();
+        if (pendingExportType === 'excel') {
+            exportExcel();
+        } else if (pendingExportType === 'word') {
+            exportWord();
+        }
+    } else {
+        const t = translations[currentLang];
+        alert(t.wrongPassword);
+        document.getElementById('password-input').value = '';
+        document.getElementById('password-input').focus();
+    }
+}
+
+// Allow Enter key to submit password
+document.getElementById('password-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        verifyPassword();
+    }
+});
+
+// Export to Excel
+async function exportExcel() {
+    try {
+        const res = await fetch('/api/results');
+        const data = await res.json();
+        
+        if (data.length === 0) {
+            alert(currentLang === 'ar' ? 'لا توجد بيانات للتصدير' : 
+                  currentLang === 'fr' ? 'Aucune donnée à exporter' : 
+                  'No data to export');
+            return;
+        }
+
+        const t = translations[currentLang];
+        
+        // Prepare data for Excel
+        const excelData = data.map((d, index) => {
+            const row = {
+                '#': index + 1,
+                [t.parent]: d.parentName,
+                [t.student]: d.studentName,
+                [t.phone]: d.phone,
+                [t.comment]: d.comments || '-'
+            };
+            
+            // Add question responses
+            t.questions.forEach((q, i) => {
+                const value = parseInt(d.answers[`q${i}`] || 0);
+                row[`Q${i + 1}: ${q}`] = t.options[value];
+            });
+            
+            return row;
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Survey Results');
+        
+        // Auto-size columns
+        const maxWidth = 50;
+        const colWidths = Object.keys(excelData[0]).map(key => {
+            const maxLength = Math.max(
+                key.length,
+                ...excelData.map(row => String(row[key]).length)
+            );
+            return { wch: Math.min(maxLength + 2, maxWidth) };
+        });
+        worksheet['!cols'] = colWidths;
+        
+        XLSX.writeFile(workbook, `Enquete_Alkawthar_${new Date().toISOString().split('T')[0]}.xlsx`);
+        
+        alert(currentLang === 'ar' ? 'تم التصدير بنجاح!' : 
+              currentLang === 'fr' ? 'Exporté avec succès !' : 
+              'Exported successfully!');
+    } catch (error) {
+        console.error('Export error:', error);
+        alert(currentLang === 'ar' ? 'حدث خطأ أثناء التصدير' : 
+              currentLang === 'fr' ? 'Erreur lors de l\'exportation' : 
+              'Export error');
+    }
+}
+
+// Export to Word
+async function exportWord() {
+    try {
+        const res = await fetch('/api/results');
+        const data = await res.json();
+        
+        if (data.length === 0) {
+            alert(currentLang === 'ar' ? 'لا توجد بيانات للتصدير' : 
+                  currentLang === 'fr' ? 'Aucune donnée à exporter' : 
+                  'No data to export');
+            return;
+        }
+
+        const t = translations[currentLang];
+        
+        // Calculate statistics
+        const numQuestions = t.questions.length;
+        const sums = new Array(numQuestions).fill(0);
+        
+        data.forEach(d => {
+            for (let i = 0; i < numQuestions; i++) {
+                sums[i] += parseInt(d.answers[`q${i}`] || 0);
+            }
+        });
+        
+        const averages = sums.map(s => ((s / (data.length * 2)) * 100).toFixed(1));
+        const overallSatisfaction = (averages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / numQuestions).toFixed(1);
+
+        // Create HTML content for Word
+        let htmlContent = `
+            <!DOCTYPE html>
+            <html lang="${currentLang}" dir="${currentLang === 'ar' ? 'rtl' : 'ltr'}">
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body { font-family: Arial, sans-serif; direction: ${currentLang === 'ar' ? 'rtl' : 'ltr'}; }
+                    h1 { color: #1a2a6c; text-align: center; }
+                    h2 { color: #b21f1f; margin-top: 30px; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #ddd; padding: 12px; text-align: ${currentLang === 'ar' ? 'right' : 'left'}; }
+                    th { background-color: #1a2a6c; color: white; }
+                    tr:nth-child(even) { background-color: #f8f9fa; }
+                    .stats { background-color: #fdbb2d; padding: 15px; border-radius: 10px; margin: 20px 0; }
+                </style>
+            </head>
+            <body>
+                <h1>${t.title}</h1>
+                <p style="text-align: center; font-size: 14px;">
+                    ${currentLang === 'ar' ? 'تاريخ التقرير' : currentLang === 'fr' ? 'Date du rapport' : 'Report Date'}: 
+                    ${new Date().toLocaleDateString(currentLang)}
+                </p>
+                
+                <div class="stats">
+                    <h3>${t.analyticsTitle}</h3>
+                    <p><strong>${t.responsesLabel}:</strong> ${data.length}</p>
+                    <p><strong>${t.satisfactionLabel}:</strong> ${overallSatisfaction}%</p>
+                </div>
+                
+                <h2>${currentLang === 'ar' ? 'التقييم حسب السؤال' : currentLang === 'fr' ? 'Évaluation par question' : 'Ratings by Question'}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>${currentLang === 'ar' ? 'السؤال' : currentLang === 'fr' ? 'Question' : 'Question'}</th>
+                            <th>${currentLang === 'ar' ? 'نسبة الرضا' : currentLang === 'fr' ? 'Satisfaction' : 'Satisfaction'}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${t.questions.map((q, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td>${q}</td>
+                                <td>${averages[i]}%</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                
+                <h2>${currentLang === 'ar' ? 'جميع الإجابات' : currentLang === 'fr' ? 'Toutes les réponses' : 'All Responses'}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>${t.parent}</th>
+                            <th>${t.student}</th>
+                            <th>${t.phone}</th>
+                            <th>${t.comment}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map((d, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td>${d.parentName}</td>
+                                <td>${d.studentName}</td>
+                                <td>${d.phone}</td>
+                                <td>${d.comments || '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        // Create blob and download
+        const blob = new Blob(['\ufeff', htmlContent], {
+            type: 'application/msword'
+        });
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Rapport_Alkawthar_${new Date().toISOString().split('T')[0]}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        alert(currentLang === 'ar' ? 'تم التصدير بنجاح!' : 
+              currentLang === 'fr' ? 'Exporté avec succès !' : 
+              'Exported successfully!');
+    } catch (error) {
+        console.error('Export error:', error);
+        alert(currentLang === 'ar' ? 'حدث خطأ أثناء التصدير' : 
+              currentLang === 'fr' ? 'Erreur lors de l\'exportation' : 
+              'Export error');
+    }
+}
+
 // Initialize with Arabic language
 setLanguage('ar');
+
+// Load analytics on page load
+window.addEventListener('load', () => {
+    loadAnalytics();
+});
