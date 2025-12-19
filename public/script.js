@@ -18,6 +18,18 @@ const translations = {
         close: "إغلاق",
         surveyFor: "الاستبيان الخاص ب",
         resultsBtn: "عرض النتائج",
+        programmes: {
+            'français': 'البرنامج الفرنسي',
+            'britannique': 'البرنامج البريطاني',
+            'américain': 'البرنامج الأمريكي'
+        },
+        sections: {
+            'Primaire': 'الابتدائي',
+            'Secondaire Filles': 'الثانوي بنات',
+            'Secondaire Garçons': 'الثانوي بنين',
+            'Primaire Filles': 'الابتدائي بنات',
+            'Primaire Garçons': 'الابتدائي بنين'
+        },
         exportExcel: "تصدير Excel",
         exportWord: "تصدير Word",
         passwordTitle: "أدخل كلمة المرور",
@@ -80,6 +92,18 @@ const translations = {
         close: "Fermer",
         surveyFor: "Enquête pour",
         resultsBtn: "Voir les Résultats",
+        programmes: {
+            'français': 'Programme Français',
+            'britannique': 'Programme Britannique',
+            'américain': 'Programme Américain'
+        },
+        sections: {
+            'Primaire': 'Primaire',
+            'Secondaire Filles': 'Secondaire Filles',
+            'Secondaire Garçons': 'Secondaire Garçons',
+            'Primaire Filles': 'Primaire Filles',
+            'Primaire Garçons': 'Primaire Garçons'
+        },
         exportExcel: "Exporter Excel",
         exportWord: "Exporter Word",
         passwordTitle: "Entrez le mot de passe",
@@ -142,6 +166,18 @@ const translations = {
         close: "Close",
         surveyFor: "Survey for",
         resultsBtn: "View Results",
+        programmes: {
+            'français': 'French Program',
+            'britannique': 'British Program',
+            'américain': 'American Program'
+        },
+        sections: {
+            'Primaire': 'Primary',
+            'Secondaire Filles': 'Secondary Girls',
+            'Secondaire Garçons': 'Secondary Boys',
+            'Primaire Filles': 'Primary Girls',
+            'Primaire Garçons': 'Primary Boys'
+        },
         exportExcel: "Export Excel",
         exportWord: "Export Word",
         passwordTitle: "Enter Password",
@@ -222,6 +258,14 @@ function setLanguage(lang) {
     document.getElementById('close-text').innerText = t.close;
     document.getElementById('results-btn-text').innerText = t.resultsBtn;
     document.getElementById('survey-for-label').innerText = t.surveyFor;
+    
+    // Update programme and section display
+    const programme = sessionStorage.getItem('surveyProgramme');
+    const section = sessionStorage.getItem('surveySection');
+    if (programme && section) {
+        document.getElementById('selected-programme').innerText = t.programmes[programme] || programme;
+        document.getElementById('selected-section').innerText = t.sections[section] || section;
+    }
 
     // Regenerate questions
     const container = document.getElementById('questions-container');
@@ -325,9 +369,10 @@ function checkSession() {
     }
     
     // Display selected info
+    const t = translations[currentLang];
     document.getElementById('section-info').style.display = 'block';
-    document.getElementById('selected-programme').innerText = programme.charAt(0).toUpperCase() + programme.slice(1);
-    document.getElementById('selected-section').innerText = section;
+    document.getElementById('selected-programme').innerText = t.programmes[programme] || programme;
+    document.getElementById('selected-section').innerText = t.sections[section] || section;
     document.getElementById('selected-email').innerText = email;
     
     return true;

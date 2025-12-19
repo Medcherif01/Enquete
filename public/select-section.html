@@ -296,7 +296,14 @@
                 continue: 'المتابعة إلى الاستبيان',
                 progFrench: 'البرنامج الفرنسي',
                 progBritish: 'البرنامج البريطاني',
-                progAmerican: 'البرنامج الأمريكي'
+                progAmerican: 'البرنامج الأمريكي',
+                sections: {
+                    'Primaire': 'الابتدائي',
+                    'Secondaire Filles': 'الثانوي بنات',
+                    'Secondaire Garçons': 'الثانوي بنين',
+                    'Primaire Filles': 'الابتدائي بنات',
+                    'Primaire Garçons': 'الابتدائي بنين'
+                }
             },
             fr: {
                 title: 'Enquête de Satisfaction',
@@ -308,7 +315,14 @@
                 continue: 'Continuer vers l\'enquête',
                 progFrench: 'Programme Français',
                 progBritish: 'Programme Britannique',
-                progAmerican: 'Programme Américain'
+                progAmerican: 'Programme Américain',
+                sections: {
+                    'Primaire': 'Primaire',
+                    'Secondaire Filles': 'Secondaire Filles',
+                    'Secondaire Garçons': 'Secondaire Garçons',
+                    'Primaire Filles': 'Primaire Filles',
+                    'Primaire Garçons': 'Primaire Garçons'
+                }
             },
             en: {
                 title: 'Satisfaction Survey',
@@ -320,7 +334,14 @@
                 continue: 'Continue to Survey',
                 progFrench: 'French Program',
                 progBritish: 'British Program',
-                progAmerican: 'American Program'
+                progAmerican: 'American Program',
+                sections: {
+                    'Primaire': 'Primary',
+                    'Secondaire Filles': 'Secondary Girls',
+                    'Secondaire Garçons': 'Secondary Boys',
+                    'Primaire Filles': 'Primary Girls',
+                    'Primaire Garçons': 'Primary Boys'
+                }
             }
         };
         
@@ -375,10 +396,12 @@
             const buttonsDiv = document.getElementById('section-buttons');
             
             buttonsDiv.innerHTML = '';
+            const t = translations[currentLang];
             sections[programme].forEach(section => {
                 const btn = document.createElement('button');
                 btn.className = 'section-btn';
-                btn.innerText = section;
+                btn.innerText = t.sections[section] || section;
+                btn.setAttribute('data-section', section);
                 btn.onclick = () => selectSection(section);
                 buttonsDiv.appendChild(btn);
             });

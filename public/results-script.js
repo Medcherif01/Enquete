@@ -19,6 +19,18 @@ const translations = {
         sectionLabel: "القسم:",
         allOption: "الكل",
         applyFilter: "تطبيق التصفية",
+        programmes: {
+            'français': 'البرنامج الفرنسي',
+            'britannique': 'البرنامج البريطاني',
+            'américain': 'البرنامج الأمريكي'
+        },
+        sectionNames: {
+            'Primaire': 'الابتدائي',
+            'Secondaire Filles': 'الثانوي بنات',
+            'Secondaire Garçons': 'الثانوي بنين',
+            'Primaire Filles': 'الابتدائي بنات',
+            'Primaire Garçons': 'الابتدائي بنين'
+        },
         parent: "اسم ولي الأمر",
         student: "اسم التلميذ(ة)",
         phone: "رقم الهاتف",
@@ -62,6 +74,18 @@ const translations = {
         sectionLabel: "Section :",
         allOption: "Tous",
         applyFilter: "Appliquer le filtre",
+        programmes: {
+            'français': 'Programme Français',
+            'britannique': 'Programme Britannique',
+            'américain': 'Programme Américain'
+        },
+        sectionNames: {
+            'Primaire': 'Primaire',
+            'Secondaire Filles': 'Secondaire Filles',
+            'Secondaire Garçons': 'Secondaire Garçons',
+            'Primaire Filles': 'Primaire Filles',
+            'Primaire Garçons': 'Primaire Garçons'
+        },
         parent: "Nom du Parent",
         student: "Nom de l'élève",
         phone: "Numéro de Téléphone",
@@ -105,6 +129,18 @@ const translations = {
         sectionLabel: "Section:",
         allOption: "All",
         applyFilter: "Apply Filter",
+        programmes: {
+            'français': 'French Program',
+            'britannique': 'British Program',
+            'américain': 'American Program'
+        },
+        sectionNames: {
+            'Primaire': 'Primary',
+            'Secondaire Filles': 'Secondary Girls',
+            'Secondaire Garçons': 'Secondary Boys',
+            'Primaire Filles': 'Primary Girls',
+            'Primaire Garçons': 'Primary Boys'
+        },
         parent: "Parent Name",
         student: "Student Name",
         phone: "Phone Number",
@@ -208,6 +244,28 @@ function setLanguage(lang) {
         document.getElementById('export-excel-text').innerText = t.exportExcel;
         document.getElementById('export-word-text').innerText = t.exportWord;
         document.getElementById('back-link-2').innerHTML = `<i class="fas fa-arrow-${lang === 'ar' ? 'right' : 'left'}"></i> ${t.backLink}`;
+        
+        // Update filter labels
+        if (document.getElementById('filter-title')) {
+            document.getElementById('filter-title').innerHTML = `<i class="fas fa-filter"></i> ${t.filterTitle}`;
+            document.getElementById('prog-label').innerText = t.programmeLabel;
+            document.getElementById('sec-label').innerText = t.sectionLabel;
+            document.getElementById('apply-btn-text').innerText = t.applyFilter;
+            
+            // Update programme options
+            const programmeSelect = document.getElementById('filter-programme');
+            if (programmeSelect) {
+                const selectedProg = programmeSelect.value;
+                programmeSelect.innerHTML = `
+                    <option value="">${t.allOption}</option>
+                    <option value="français">${t.programmes['français']}</option>
+                    <option value="britannique">${t.programmes['britannique']}</option>
+                    <option value="américain">${t.programmes['américain']}</option>
+                `;
+                programmeSelect.value = selectedProg;
+                updateSectionFilter();
+            }
+        }
     }
     
     // Reload analytics with new language
@@ -755,7 +813,7 @@ function updateSectionFilter() {
         sections[programme].forEach(section => {
             const option = document.createElement('option');
             option.value = section;
-            option.textContent = section;
+            option.textContent = t.sectionNames[section] || section;
             sectionSelect.appendChild(option);
         });
     }
