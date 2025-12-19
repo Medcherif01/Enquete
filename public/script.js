@@ -16,6 +16,7 @@ const translations = {
         success: "تم تسجيل إجابتكم بنجاح!",
         thanks: "شكراً لمشاركتكم القيمة",
         close: "إغلاق",
+        resultsBtn: "عرض النتائج",
         exportExcel: "تصدير Excel",
         exportWord: "تصدير Word",
         passwordTitle: "أدخل كلمة المرور",
@@ -76,6 +77,7 @@ const translations = {
         success: "Enregistré avec succès !",
         thanks: "Merci pour votre précieuse participation",
         close: "Fermer",
+        resultsBtn: "Voir les Résultats",
         exportExcel: "Exporter Excel",
         exportWord: "Exporter Word",
         passwordTitle: "Entrez le mot de passe",
@@ -136,6 +138,7 @@ const translations = {
         success: "Submitted successfully!",
         thanks: "Thank you for your valuable participation",
         close: "Close",
+        resultsBtn: "View Results",
         exportExcel: "Export Excel",
         exportWord: "Export Word",
         passwordTitle: "Enter Password",
@@ -214,6 +217,7 @@ function setLanguage(lang) {
     document.getElementById('conf-msg').innerText = t.success;
     document.getElementById('thanks-msg').innerText = t.thanks;
     document.getElementById('close-text').innerText = t.close;
+    document.getElementById('results-btn-text').innerText = t.resultsBtn;
 
     // Regenerate questions
     const container = document.getElementById('questions-container');

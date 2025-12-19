@@ -340,46 +340,114 @@ async function exportExcel() {
         }
 
         const t = translations[currentLang];
+        const workbook = XLSX.utils.book_new();
         
-        // Prepare data for Excel
-        const excelData = data.map((d, index) => {
-            const row = {
-                '#': index + 1,
-                [t.parent]: d.parentName,
-                [t.student]: d.studentName,
-                [t.phone]: d.phone,
-                [t.comment]: d.comments || '-'
-            };
+        // Sheet 1: Statistics Summary
+        const statsData = [];
+        statsData.push(['Rapport d\'Enquête Al-Kawthar']);
+        statsData.push(['Date:', new Date().toLocaleDateString()]);
+        statsData.push(['Total Participants:', data.length]);
+        statsData.push([]);
+        
+        // Calculate statistics
+        const numQuestions = 15;
+        const sums = new Array(numQuestions).fill(0);
+        const counts = new Array(numQuestions).fill(0);
+        
+        data.forEach(d => {
+            for (let i = 0; i < numQuestions; i++) {
+                const val = parseInt(d.answers[`q${i}`] || 0);
+                if (!isNaN(val)) {
+                    sums[i] += val;
+                    counts[i]++;
+                }
+            }
+        });
+        
+        statsData.push(['Question', 'Moyenne', 'Satisfaction %']);
+        t.questions.forEach((q, i) => {
+            const avg = counts[i] > 0 ? (sums[i] / counts[i]).toFixed(2) : '0.00';
+            const percentage = counts[i] > 0 ? (((sums[i] / counts[i]) - 1) / 2 * 100).toFixed(1) : '0.0';
+            statsData.push([`${i + 1}. ${q}`, avg, `${percentage}%`]);
+        });
+        
+        const statsSheet = XLSX.utils.aoa_to_sheet(statsData);
+        
+        // Style for stats sheet
+        if (!statsSheet['!cols']) statsSheet['!cols'] = [];
+        statsSheet['!cols'][0] = { wch: 50 };
+        statsSheet['!cols'][1] = { wch: 15 };
+        statsSheet['!cols'][2] = { wch: 15 };
+        
+        XLSX.utils.book_append_sheet(workbook, statsSheet, 'Statistiques');
+        
+        // Sheet 2: Detailed Responses
+        const detailedData = [];
+        detailedData.push(['#', 'Parent', 'Élève', 'Téléphone', ...t.questions.map((q, i) => `Q${i+1}`), 'Commentaires', 'Date']);
+        
+        data.forEach((d, index) => {
+            const row = [
+                index + 1,
+                d.parentName || '',
+                d.studentName || '',
+                d.phone || ''
+            ];
             
             // Add question responses
-            t.questions.forEach((q, i) => {
+            for (let i = 0; i < numQuestions; i++) {
                 const value = parseInt(d.answers[`q${i}`] || 0);
-                row[`Q${i + 1}: ${q}`] = t.options[value];
-                
-                // Add suggestion if exists
-                if (d.suggestions && d.suggestions[`q${i}`]) {
-                    row[`${t.suggestion} Q${i + 1}`] = d.suggestions[`q${i}`];
-                }
-            });
+                row.push(t.options[value] || '');
+            }
             
-            return row;
+            row.push(d.comments || '');
+            row.push(new Date(d.date).toLocaleDateString());
+            
+            detailedData.push(row);
         });
-
-        const worksheet = XLSX.utils.json_to_sheet(excelData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Survey Results');
         
-        // Auto-size columns
-        const maxWidth = 50;
-        const colWidths = Object.keys(excelData[0]).map(key => {
-            const maxLength = Math.max(
-                key.length,
-                ...excelData.map(row => String(row[key] || '').length)
-            );
-            return { wch: Math.min(maxLength + 2, maxWidth) };
+        const detailedSheet = XLSX.utils.aoa_to_sheet(detailedData);
+        
+        // Auto-size columns for detailed sheet
+        if (!detailedSheet['!cols']) detailedSheet['!cols'] = [];
+        detailedSheet['!cols'][0] = { wch: 5 };
+        detailedSheet['!cols'][1] = { wch: 20 };
+        detailedSheet['!cols'][2] = { wch: 20 };
+        detailedSheet['!cols'][3] = { wch: 15 };
+        for (let i = 4; i < 4 + numQuestions; i++) {
+            detailedSheet['!cols'][i] = { wch: 15 };
+        }
+        detailedSheet['!cols'][4 + numQuestions] = { wch: 30 };
+        detailedSheet['!cols'][5 + numQuestions] = { wch: 12 };
+        
+        XLSX.utils.book_append_sheet(workbook, detailedSheet, 'Réponses Détaillées');
+        
+        // Sheet 3: Suggestions
+        const suggestionsData = [];
+        suggestionsData.push(['Question', 'Suggestions']);
+        
+        t.questions.forEach((q, i) => {
+            const suggestions = data
+                .map(d => d.suggestions && d.suggestions[`q${i}`] ? d.suggestions[`q${i}`] : '')
+                .filter(s => s.trim() !== '');
+            
+            if (suggestions.length > 0) {
+                suggestionsData.push([`${i + 1}. ${q}`, '']);
+                suggestions.forEach(s => {
+                    suggestionsData.push(['', `• ${s}`]);
+                });
+                suggestionsData.push(['', '']);
+            }
         });
-        worksheet['!cols'] = colWidths;
         
+        const suggestionsSheet = XLSX.utils.aoa_to_sheet(suggestionsData);
+        
+        if (!suggestionsSheet['!cols']) suggestionsSheet['!cols'] = [];
+        suggestionsSheet['!cols'][0] = { wch: 50 };
+        suggestionsSheet['!cols'][1] = { wch: 80 };
+        
+        XLSX.utils.book_append_sheet(workbook, suggestionsSheet, 'Suggestions');
+        
+        // Save file
         XLSX.writeFile(workbook, `Enquete_Alkawthar_${new Date().toISOString().split('T')[0]}.xlsx`);
         
         alert(currentLang === 'ar' ? 'تم التصدير بنجاح!' : 
@@ -428,28 +496,147 @@ async function exportWord() {
             <head>
                 <meta charset="UTF-8">
                 <style>
-                    body { font-family: Arial, sans-serif; direction: ${currentLang === 'ar' ? 'rtl' : 'ltr'}; }
-                    h1 { color: #1a2a6c; text-align: center; }
-                    h2 { color: #b21f1f; margin-top: 30px; }
-                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                    th, td { border: 1px solid #ddd; padding: 12px; text-align: ${currentLang === 'ar' ? 'right' : 'left'}; }
-                    th { background-color: #1a2a6c; color: white; }
-                    tr:nth-child(even) { background-color: #f8f9fa; }
-                    .stats { background-color: #fdbb2d; padding: 15px; border-radius: 10px; margin: 20px 0; }
-                    .suggestion { background-color: #e8f5e9; padding: 8px; margin: 5px 0; border-left: 3px solid #27ae60; }
+                    @page { margin: 2cm; }
+                    body { 
+                        font-family: 'Arial', 'Segoe UI', 'Helvetica', sans-serif; 
+                        direction: ${currentLang === 'ar' ? 'rtl' : 'ltr'};
+                        line-height: 1.6;
+                        color: #333;
+                        padding: 20px;
+                    }
+                    .header {
+                        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+                        color: white;
+                        padding: 30px;
+                        text-align: center;
+                        border-radius: 15px;
+                        margin-bottom: 30px;
+                    }
+                    h1 { 
+                        color: white;
+                        margin: 0;
+                        font-size: 32px;
+                        font-weight: bold;
+                    }
+                    h2 { 
+                        color: #1a2a6c;
+                        margin-top: 40px;
+                        padding-bottom: 10px;
+                        border-bottom: 3px solid #fdbb2d;
+                        font-size: 24px;
+                    }
+                    h3 {
+                        color: #b21f1f;
+                        margin-top: 25px;
+                        font-size: 20px;
+                    }
+                    table { 
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 25px 0;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                        background: white;
+                    }
+                    th, td { 
+                        border: 1px solid #e0e0e0;
+                        padding: 15px;
+                        text-align: ${currentLang === 'ar' ? 'right' : 'left'};
+                    }
+                    th { 
+                        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+                        color: white;
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-transform: uppercase;
+                    }
+                    tr:nth-child(even) { 
+                        background-color: #f9f9f9;
+                    }
+                    tr:hover {
+                        background-color: #fff8e1;
+                    }
+                    .stats { 
+                        background: linear-gradient(135deg, #fdbb2d 0%, #ff9800 100%);
+                        padding: 25px;
+                        border-radius: 15px;
+                        margin: 30px 0;
+                        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+                        color: #1a2a6c;
+                    }
+                    .stats h3 {
+                        color: #1a2a6c;
+                        margin-top: 0;
+                    }
+                    .stats p {
+                        font-size: 16px;
+                        margin: 10px 0;
+                    }
+                    .stats strong {
+                        font-weight: bold;
+                    }
+                    .participant-card {
+                        margin-bottom: 40px;
+                        padding: 25px;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 15px;
+                        background: #fafafa;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        page-break-inside: avoid;
+                    }
+                    .participant-card h3 {
+                        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 10px;
+                        margin: -25px -25px 20px -25px;
+                    }
+                    .response-item {
+                        margin: 15px 0;
+                        padding: 12px;
+                        background: white;
+                        border-${currentLang === 'ar' ? 'right' : 'left'}: 4px solid #1a2a6c;
+                        border-radius: 5px;
+                    }
+                    .suggestion { 
+                        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+                        padding: 12px;
+                        margin: 10px 0;
+                        border-${currentLang === 'ar' ? 'right' : 'left'}: 5px solid #27ae60;
+                        border-radius: 8px;
+                        font-style: italic;
+                    }
+                    .suggestion strong {
+                        color: #27ae60;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 50px;
+                        padding: 20px;
+                        border-top: 3px solid #fdbb2d;
+                        color: #666;
+                        font-size: 12px;
+                    }
+                    .date-info {
+                        text-align: center;
+                        color: white;
+                        font-size: 14px;
+                        margin-top: 10px;
+                    }
                 </style>
             </head>
             <body>
-                <h1>${t.resultsTitle}</h1>
-                <p style="text-align: center; font-size: 14px;">
-                    ${currentLang === 'ar' ? 'تاريخ التقرير' : currentLang === 'fr' ? 'Date du rapport' : 'Report Date'}: 
-                    ${new Date().toLocaleDateString(currentLang)}
-                </p>
+                <div class="header">
+                    <h1>🎓 ${t.resultsTitle}</h1>
+                    <p class="date-info">
+                        ${currentLang === 'ar' ? 'تاريخ التقرير' : currentLang === 'fr' ? 'Date du rapport' : 'Report Date'}: 
+                        ${new Date().toLocaleDateString(currentLang)}
+                    </p>
+                </div>
                 
                 <div class="stats">
-                    <h3>${t.analyticsTitle}</h3>
-                    <p><strong>${t.responsesLabel}:</strong> ${data.length}</p>
-                    <p><strong>${t.satisfactionLabel}:</strong> ${overallSatisfaction}%</p>
+                    <h3>📊 ${t.analyticsTitle}</h3>
+                    <p><strong>👥 ${t.responsesLabel}:</strong> ${data.length} ${currentLang === 'ar' ? 'مشارك' : currentLang === 'fr' ? 'participants' : 'participants'}</p>
+                    <p><strong>⭐ ${t.satisfactionLabel}:</strong> ${overallSatisfaction}%</p>
                 </div>
                 
                 <h2>${currentLang === 'ar' ? 'التقييم حسب السؤال' : currentLang === 'fr' ? 'Évaluation par question' : 'Ratings by Question'}</h2>
@@ -472,28 +659,33 @@ async function exportWord() {
                     </tbody>
                 </table>
                 
-                <h2>${currentLang === 'ar' ? 'جميع الإجابات والاقتراحات' : currentLang === 'fr' ? 'Toutes les réponses et suggestions' : 'All Responses and Suggestions'}</h2>
+                <h2>📋 ${currentLang === 'ar' ? 'جميع الإجابات والاقتراحات' : currentLang === 'fr' ? 'Toutes les réponses et suggestions' : 'All Responses and Suggestions'}</h2>
                 ${data.map((d, i) => `
-                    <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                        <h3>${currentLang === 'ar' ? 'المشارك' : currentLang === 'fr' ? 'Participant' : 'Participant'} ${i + 1}</h3>
-                        <p><strong>${t.parent}:</strong> ${d.parentName}</p>
-                        <p><strong>${t.student}:</strong> ${d.studentName}</p>
-                        <p><strong>${t.phone}:</strong> ${d.phone}</p>
-                        ${d.comments ? `<p><strong>${t.comment}:</strong> ${d.comments}</p>` : ''}
+                    <div class="participant-card">
+                        <h3>👤 ${currentLang === 'ar' ? 'المشارك' : currentLang === 'fr' ? 'Participant' : 'Participant'} ${i + 1}</h3>
+                        <p><strong>👨‍👩‍👧 ${t.parent}:</strong> ${d.parentName}</p>
+                        <p><strong>👦 ${t.student}:</strong> ${d.studentName}</p>
+                        <p><strong>📞 ${t.phone}:</strong> ${d.phone}</p>
+                        ${d.comments ? `<p><strong>💬 ${t.comment}:</strong> ${d.comments}</p>` : ''}
                         
-                        <h4>${currentLang === 'ar' ? 'الإجابات' : currentLang === 'fr' ? 'Réponses' : 'Answers'}</h4>
+                        <h4>${currentLang === 'ar' ? '📝 الإجابات' : currentLang === 'fr' ? '📝 Réponses' : '📝 Answers'}</h4>
                         ${t.questions.map((q, qi) => `
-                            <div style="margin: 10px 0;">
+                            <div class="response-item">
                                 <strong>Q${qi + 1}. ${q}:</strong> ${t.options[parseInt(d.answers[`q${qi}`])]}
                                 ${d.suggestions && d.suggestions[`q${qi}`] ? `
                                     <div class="suggestion">
-                                        <strong>${t.suggestion}:</strong> ${d.suggestions[`q${qi}`]}
+                                        <strong>💡 ${t.suggestion || (currentLang === 'ar' ? 'اقتراح' : currentLang === 'fr' ? 'Suggestion' : 'Suggestion')}:</strong> ${d.suggestions[`q${qi}`]}
                                     </div>
                                 ` : ''}
                             </div>
                         `).join('')}
                     </div>
                 `).join('')}
+                
+                <div class="footer">
+                    <p>© ${new Date().getFullYear()} ${currentLang === 'ar' ? 'مؤسسة الكوثر التعليمية' : currentLang === 'fr' ? 'Institution Al-Kawthar' : 'Al-Kawthar Institution'}</p>
+                    <p>${currentLang === 'ar' ? 'تقرير مُنشأ تلقائياً' : currentLang === 'fr' ? 'Rapport généré automatiquement' : 'Automatically generated report'}</p>
+                </div>
             </body>
             </html>
         `;
