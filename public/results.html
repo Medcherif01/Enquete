@@ -129,13 +129,35 @@
             الرجاء إدخال كلمة المرور للوصول إلى النتائج
         </p>
         
-        <input 
-            type="password" 
-            id="password-input" 
-            class="password-field" 
-            placeholder="كلمة المرور"
-            autocomplete="off"
-        >
+        <div style="position: relative; width: 100%;">
+            <input 
+                type="password" 
+                id="password-input" 
+                class="password-field" 
+                placeholder="كلمة المرور"
+                autocomplete="off"
+            >
+            <button 
+                type="button" 
+                id="toggle-password" 
+                onclick="togglePasswordVisibility()"
+                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666; font-size: 18px;"
+            >
+                <i class="fas fa-eye" id="eye-icon"></i>
+            </button>
+        </div>
+        
+        <div style="text-align: left; margin: -10px 0 20px 0;">
+            <label style="display: inline-flex; align-items: center; cursor: pointer; color: #666; font-size: 14px;">
+                <input 
+                    type="checkbox" 
+                    id="show-password-checkbox" 
+                    onchange="togglePasswordVisibility()"
+                    style="margin-left: 8px; cursor: pointer;"
+                >
+                <span id="show-password-label">إظهار كلمة المرور</span>
+            </label>
+        </div>
         
         <button onclick="verifyPassword()" class="login-btn" id="login-btn">
             <i class="fas fa-sign-in-alt"></i>

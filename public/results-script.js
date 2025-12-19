@@ -4,6 +4,7 @@ const translations = {
         loginTitle: "نتائج الاستبيان",
         loginSubtitle: "الرجاء إدخال كلمة المرور للوصول إلى النتائج",
         loginBtn: "دخول",
+        showPassword: "إظهار كلمة المرور",
         resultsTitle: "نتائج الاستبيان",
         resultsSubtitle: "تحليل شامل لآراء أولياء الأمور",
         analyticsTitle: "نتائج التحليل",
@@ -59,6 +60,7 @@ const translations = {
         loginTitle: "Résultats de l'Enquête",
         loginSubtitle: "Veuillez entrer le mot de passe pour accéder aux résultats",
         loginBtn: "Connexion",
+        showPassword: "Afficher le mot de passe",
         resultsTitle: "Résultats de l'Enquête",
         resultsSubtitle: "Analyse complète des retours des parents",
         analyticsTitle: "Résultats d'Analyse",
@@ -114,6 +116,7 @@ const translations = {
         loginTitle: "Survey Results",
         loginSubtitle: "Please enter the password to access the results",
         loginBtn: "Login",
+        showPassword: "Show password",
         resultsTitle: "Survey Results",
         resultsSubtitle: "Comprehensive analysis of parent feedback",
         analyticsTitle: "Analysis Results",
@@ -195,6 +198,23 @@ function verifyPassword() {
     }
 }
 
+// Toggle password visibility
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password-input');
+    const eyeIcon = document.getElementById('eye-icon');
+    const checkbox = document.getElementById('show-password-checkbox');
+    
+    if (checkbox.checked) {
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
+
 // Allow Enter key to submit password
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('password-input').addEventListener('keypress', function(e) {
@@ -230,6 +250,7 @@ function setLanguage(lang) {
         document.getElementById('login-subtitle').innerText = t.loginSubtitle;
         document.getElementById('login-btn-text').innerText = t.loginBtn;
         document.getElementById('error-text').innerText = t.errorMsg;
+        document.getElementById('show-password-label').innerText = t.showPassword;
         document.getElementById('back-link').innerHTML = `<i class="fas fa-arrow-${lang === 'ar' ? 'right' : 'left'}"></i> ${t.backLink}`;
     }
     
@@ -834,14 +855,14 @@ async function exportWord() {
         }
         fileName += `_${new Date().toISOString().split('T')[0]}.doc`;
         
-        const url = URL.createObjectURL(blob);
+        const downloadUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = url;
+        link.href = downloadUrl;
         link.download = fileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(downloadUrl);
         
         alert(currentLang === 'ar' ? 'تم التصدير بنجاح!' : 
               currentLang === 'fr' ? 'Exporté avec succès !' : 
