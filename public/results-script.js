@@ -402,7 +402,14 @@ async function loadAnalytics() {
 // Export to Excel
 async function exportExcel() {
     try {
-        const res = await fetch('/api/results');
+        // Build URL with current filters
+        let url = '/api/results';
+        const params = [];
+        if (currentFilter.programme) params.push(`programme=${encodeURIComponent(currentFilter.programme)}`);
+        if (currentFilter.section) params.push(`section=${encodeURIComponent(currentFilter.section)}`);
+        if (params.length > 0) url += `?${params.join('&')}`;
+        
+        const res = await fetch(url);
         const data = await res.json();
         
         if (data.length === 0) {
@@ -419,6 +426,15 @@ async function exportExcel() {
         const statsData = [];
         statsData.push(['Rapport d\'Enquête Al-Kawthar']);
         statsData.push(['Date:', new Date().toLocaleDateString()]);
+        
+        // Add filter information
+        if (currentFilter.programme) {
+            statsData.push(['Programme:', t.programmes[currentFilter.programme] || currentFilter.programme]);
+        }
+        if (currentFilter.section) {
+            statsData.push(['Section (en branche):', t.sectionNames[currentFilter.section] || currentFilter.section]);
+        }
+        
         statsData.push(['Total Participants:', data.length]);
         statsData.push([]);
         
@@ -520,8 +536,16 @@ async function exportExcel() {
         
         XLSX.utils.book_append_sheet(workbook, suggestionsSheet, 'Suggestions');
         
-        // Save file
-        XLSX.writeFile(workbook, `Enquete_Alkawthar_${new Date().toISOString().split('T')[0]}.xlsx`);
+        // Save file with section-specific name
+        let fileName = 'Enquete_Alkawthar';
+        if (currentFilter.programme) {
+            fileName += `_${currentFilter.programme}`;
+        }
+        if (currentFilter.section) {
+            fileName += `_${currentFilter.section.replace(/\s+/g, '_')}`;
+        }
+        fileName += `_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
         
         alert(currentLang === 'ar' ? 'تم التصدير بنجاح!' : 
               currentLang === 'fr' ? 'Exporté avec succès !' : 
@@ -537,7 +561,14 @@ async function exportExcel() {
 // Export to Word
 async function exportWord() {
     try {
-        const res = await fetch('/api/results');
+        // Build URL with current filters
+        let url = '/api/results';
+        const params = [];
+        if (currentFilter.programme) params.push(`programme=${encodeURIComponent(currentFilter.programme)}`);
+        if (currentFilter.section) params.push(`section=${encodeURIComponent(currentFilter.section)}`);
+        if (params.length > 0) url += `?${params.join('&')}`;
+        
+        const res = await fetch(url);
         const data = await res.json();
         
         if (data.length === 0) {
@@ -579,14 +610,14 @@ async function exportWord() {
                     }
                     .header {
                         background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
-                        color: white;
+                        color: #ff0000;
                         padding: 30px;
                         text-align: center;
                         border-radius: 15px;
                         margin-bottom: 30px;
                     }
                     h1 { 
-                        color: white;
+                        color: #ff0000;
                         margin: 0;
                         font-size: 32px;
                         font-weight: bold;
@@ -617,7 +648,7 @@ async function exportWord() {
                     }
                     th { 
                         background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
-                        color: white;
+                        color: #ff0000;
                         font-weight: bold;
                         font-size: 14px;
                         text-transform: uppercase;
@@ -658,7 +689,7 @@ async function exportWord() {
                     }
                     .participant-card h3 {
                         background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
-                        color: white;
+                        color: #ff0000;
                         padding: 12px 20px;
                         border-radius: 10px;
                         margin: -25px -25px 20px -25px;
@@ -691,9 +722,20 @@ async function exportWord() {
                     }
                     .date-info {
                         text-align: center;
-                        color: white;
+                        color: #ff0000;
                         font-size: 14px;
                         margin-top: 10px;
+                    }
+                    .filter-info {
+                        text-align: center;
+                        color: #ff0000;
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin: 15px 0;
+                        padding: 10px;
+                        background: white;
+                        border-radius: 8px;
+                        border: 2px solid #ff0000;
                     }
                 </style>
             </head>
@@ -709,10 +751,19 @@ async function exportWord() {
                         ${currentLang === 'ar' ? 'تاريخ التقرير' : currentLang === 'fr' ? 'Date du rapport' : 'Report Date'}: 
                         ${new Date().toLocaleDateString(currentLang)}
                     </p>
+                    ${currentFilter.programme || currentFilter.section ? `
+                        <div class="filter-info">
+                            ${currentFilter.programme ? `📚 ${t.programmes[currentFilter.programme] || currentFilter.programme}` : ''}
+                            ${currentFilter.programme && currentFilter.section ? ' - ' : ''}
+                            ${currentFilter.section ? `👥 ${t.sectionNames[currentFilter.section] || currentFilter.section}` : ''}
+                        </div>
+                    ` : ''}
                 </div>
                 
                 <div class="stats">
                     <h3>📊 ${t.analyticsTitle}</h3>
+                    ${currentFilter.programme ? `<p><strong style="color: #ff0000;">📚 ${currentLang === 'ar' ? 'البرنامج' : currentLang === 'fr' ? 'Programme' : 'Program'}:</strong> <span style="color: #ff0000; font-weight: bold;">${t.programmes[currentFilter.programme] || currentFilter.programme}</span></p>` : ''}
+                    ${currentFilter.section ? `<p><strong style="color: #ff0000;">👥 ${currentLang === 'ar' ? 'القسم' : currentLang === 'fr' ? 'Section (en branche)' : 'Section (in branch)'}:</strong> <span style="color: #ff0000; font-weight: bold;">${t.sectionNames[currentFilter.section] || currentFilter.section}</span></p>` : ''}
                     <p><strong>👥 ${t.responsesLabel}:</strong> ${data.length} ${currentLang === 'ar' ? 'مشارك' : currentLang === 'fr' ? 'participants' : 'participants'}</p>
                     <p><strong>⭐ ${t.satisfactionLabel}:</strong> ${overallSatisfaction}%</p>
                 </div>
@@ -773,10 +824,20 @@ async function exportWord() {
             type: 'application/msword'
         });
         
+        // Create section-specific filename
+        let fileName = 'Rapport_Alkawthar';
+        if (currentFilter.programme) {
+            fileName += `_${currentFilter.programme}`;
+        }
+        if (currentFilter.section) {
+            fileName += `_${currentFilter.section.replace(/\s+/g, '_')}`;
+        }
+        fileName += `_${new Date().toISOString().split('T')[0]}.doc`;
+        
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `Rapport_Alkawthar_${new Date().toISOString().split('T')[0]}.doc`;
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -822,6 +883,26 @@ function updateSectionFilter() {
 function applyFilter() {
     currentFilter.programme = document.getElementById('filter-programme').value;
     currentFilter.section = document.getElementById('filter-section').value;
+    
+    // Show/hide export info message
+    const exportInfo = document.getElementById('export-info');
+    const exportInfoText = document.getElementById('export-info-text');
+    
+    if (currentFilter.programme || currentFilter.section) {
+        exportInfo.style.display = 'block';
+        const t = translations[currentLang];
+        
+        if (currentLang === 'ar') {
+            exportInfoText.innerHTML = `<strong>ملاحظة:</strong> سيتم تصدير البيانات المصفاة فقط${currentFilter.programme ? ` (${t.programmes[currentFilter.programme]})` : ''}${currentFilter.section ? ` (${t.sectionNames[currentFilter.section]})` : ''}`;
+        } else if (currentLang === 'fr') {
+            exportInfoText.innerHTML = `<strong>Note:</strong> Les exports incluront uniquement les données filtrées${currentFilter.programme ? ` (${t.programmes[currentFilter.programme]})` : ''}${currentFilter.section ? ` (${t.sectionNames[currentFilter.section]})` : ''}`;
+        } else {
+            exportInfoText.innerHTML = `<strong>Note:</strong> Exports will include only filtered data${currentFilter.programme ? ` (${t.programmes[currentFilter.programme]})` : ''}${currentFilter.section ? ` (${t.sectionNames[currentFilter.section]})` : ''}`;
+        }
+    } else {
+        exportInfo.style.display = 'none';
+    }
+    
     loadResults();
 }
 
