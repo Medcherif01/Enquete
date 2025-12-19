@@ -272,9 +272,9 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Serve index.html for root path
+// Redirect root to select-section.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/select-section.html'));
 });
 
 // 404 Handler

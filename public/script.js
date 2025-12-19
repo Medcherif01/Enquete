@@ -378,8 +378,18 @@ function checkSession() {
     return true;
 }
 
-// Initialize with Arabic language
-setLanguage('ar');
+// Check session FIRST (before generating questions)
+const email = sessionStorage.getItem('surveyEmail');
+const programme = sessionStorage.getItem('surveyProgramme');
+const section = sessionStorage.getItem('surveySection');
 
-// Check session on page load
-checkSession();
+if (!email || !programme || !section) {
+    // Redirect immediately before any initialization
+    window.location.href = 'select-section.html';
+} else {
+    // Initialize with Arabic language only if session exists
+    setLanguage('ar');
+    
+    // Display session info
+    checkSession();
+}
