@@ -291,6 +291,49 @@ textarea {
     margin-bottom: 15px;
 }
 
+.question-detail {
+    font-size: 0.95em;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(253, 187, 45, 0.1);
+    border-left: 3px solid var(--accent);
+    border-radius: 5px;
+    line-height: 1.5;
+}
+
+[dir="ltr"] .question-detail {
+    border-left: none;
+    border-right: 3px solid var(--accent);
+}
+
+.suggestion-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 0.95em;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.suggestion-input:focus {
+    border-color: var(--info);
+    background: white;
+    box-shadow: 0 0 15px rgba(41, 128, 185, 0.2);
+}
+
+.suggestion-input::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+}
+
 .options-group {
     display: flex;
     justify-content: space-around;

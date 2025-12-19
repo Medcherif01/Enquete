@@ -88,45 +88,6 @@
         </form>
     </div>
 
-    <!-- Analytics Container -->
-    <div id="analysis-container" class="container analysis-card hidden">
-        <h2><i class="fas fa-chart-bar"></i> <span id="analytics-title">نتائج التحليل</span></h2>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-users"></i>
-                <div class="stat-value" id="total-responses">0</div>
-                <div class="stat-label" id="responses-label">مشارك</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-smile"></i>
-                <div class="stat-value" id="avg-satisfaction">0%</div>
-                <div class="stat-label" id="satisfaction-label">رضا عام</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-star"></i>
-                <div class="stat-value" id="top-rating">-</div>
-                <div class="stat-label" id="top-label">أعلى تقييم</div>
-            </div>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="resultsChart"></canvas>
-        </div>
-
-        <!-- Export Buttons -->
-        <div class="export-actions">
-            <button onclick="secureExport('excel')" class="export-btn excel">
-                <i class="fas fa-file-excel"></i>
-                <span id="export-excel-text">تصدير Excel</span>
-            </button>
-            <button onclick="secureExport('word')" class="export-btn word">
-                <i class="fas fa-file-word"></i>
-                <span id="export-word-text">تصدير Word</span>
-            </button>
-        </div>
-    </div>
-
     <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="modal hidden">
         <div class="modal-content">
@@ -138,24 +99,6 @@
             <button onclick="closeModal()" class="modal-btn">
                 <i class="fas fa-times"></i> <span id="close-text">إغلاق</span>
             </button>
-        </div>
-    </div>
-
-    <!-- Password Modal -->
-    <div id="password-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3 id="password-title">
-                <i class="fas fa-lock"></i> أدخل كلمة المرور
-            </h3>
-            <input type="password" id="password-input" class="password-input" placeholder="كلمة المرور">
-            <div class="modal-actions">
-                <button onclick="verifyPassword()" class="modal-btn primary">
-                    <i class="fas fa-check"></i> <span id="confirm-text">تأكيد</span>
-                </button>
-                <button onclick="closePasswordModal()" class="modal-btn secondary">
-                    <i class="fas fa-times"></i> <span id="cancel-text">إلغاء</span>
-                </button>
-            </div>
         </div>
     </div>
 
