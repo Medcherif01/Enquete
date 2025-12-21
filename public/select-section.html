@@ -225,7 +225,6 @@
         <div class="step-indicator">
             <div class="step active" id="step1">1</div>
             <div class="step" id="step2">2</div>
-            <div class="step" id="step3">3</div>
         </div>
         
         <!-- Programme Selection -->
@@ -261,26 +260,9 @@
                 <i class="fas fa-users"></i> اختر القسم
             </h2>
             <div id="section-buttons" class="section-buttons"></div>
-        </div>
-        
-        <!-- Email Input -->
-        <div id="email-section" class="email-section">
-            <h2 id="email-title" style="text-align: center; color: var(--primary); margin-bottom: 20px;">
-                <i class="fas fa-envelope"></i> البريد الإلكتروني
-            </h2>
-            <div class="email-input-group">
-                <label for="parent-email" id="email-label" style="display: block; margin-bottom: 10px; font-weight: 600;">
-                    أدخل بريدك الإلكتروني
-                </label>
-                <input 
-                    type="email" 
-                    id="parent-email" 
-                    class="email-input" 
-                    placeholder="example@email.com"
-                >
-            </div>
             
-            <button id="continue-btn" class="continue-btn" onclick="continueToSurvey()" disabled>
+            <!-- Continue Button -->
+            <button id="continue-btn" class="continue-btn" onclick="continueToSurvey()" disabled style="margin-top: 30px;">
                 <i class="fas fa-arrow-left"></i>
                 <span id="continue-text">المتابعة إلى الاستبيان</span>
             </button>
@@ -298,8 +280,6 @@
                 subtitle: 'اختر البرنامج والقسم الخاص بك',
                 selectProgramme: 'اختر البرنامج التعليمي',
                 selectSection: 'اختر القسم',
-                emailTitle: 'البريد الإلكتروني',
-                emailLabel: 'أدخل بريدك الإلكتروني',
                 continue: 'المتابعة إلى الاستبيان',
                 progFrench: 'البرنامج الفرنسي',
                 progBritish: 'البرنامج البريطاني',
@@ -317,8 +297,6 @@
                 subtitle: 'Choisissez votre programme et section',
                 selectProgramme: 'Choisissez le programme scolaire',
                 selectSection: 'Choisissez la section',
-                emailTitle: 'Adresse e-mail',
-                emailLabel: 'Entrez votre adresse e-mail',
                 continue: 'Continuer vers l\'enquête',
                 progFrench: 'Programme Français',
                 progBritish: 'Programme Britannique',
@@ -336,8 +314,6 @@
                 subtitle: 'Choose your program and section',
                 selectProgramme: 'Choose the educational program',
                 selectSection: 'Choose the section',
-                emailTitle: 'Email Address',
-                emailLabel: 'Enter your email address',
                 continue: 'Continue to Survey',
                 progFrench: 'French Program',
                 progBritish: 'British Program',
@@ -376,8 +352,6 @@
             document.getElementById('txt-subtitle').innerText = t.subtitle;
             document.getElementById('select-programme-title').innerHTML = `<i class="fas fa-book"></i> ${t.selectProgramme}`;
             document.getElementById('select-section-title').innerHTML = `<i class="fas fa-users"></i> ${t.selectSection}`;
-            document.getElementById('email-title').innerHTML = `<i class="fas fa-envelope"></i> ${t.emailTitle}`;
-            document.getElementById('email-label').innerText = t.emailLabel;
             document.getElementById('continue-text').innerText = t.continue;
             document.getElementById('prog-french').innerText = t.progFrench;
             document.getElementById('prog-british').innerText = t.progBritish;
@@ -428,25 +402,14 @@
             
             // Update steps
             document.getElementById('step2').classList.add('completed');
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step3').classList.add('active');
-            
-            // Show email section
-            document.getElementById('email-section').classList.add('show');
-            document.getElementById('email-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             // Update continue button state
             updateContinueButton();
         }
         
-        // Enable continue button when email is valid
-        document.getElementById('parent-email').addEventListener('input', function(e) {
-            updateContinueButton();
-        });
-        
         function updateContinueButton() {
             const continueBtn = document.getElementById('continue-btn');
-            // Email is now optional, only programme and section are required
+            // Only programme and section are required
             if (selectedProgramme && selectedSection) {
                 continueBtn.disabled = false;
             } else {
@@ -455,8 +418,6 @@
         }
         
         function continueToSurvey() {
-            const email = document.getElementById('parent-email').value;
-            
             if (!selectedProgramme || !selectedSection) {
                 alert(currentLang === 'ar' ? 'الرجاء اختيار البرنامج والقسم' : 
                       currentLang === 'fr' ? 'Veuillez sélectionner le programme et la section' : 
@@ -464,8 +425,8 @@
                 return;
             }
             
-            // Save to sessionStorage (email is optional)
-            sessionStorage.setItem('surveyEmail', email || '');
+            // Save to sessionStorage (no email)
+            sessionStorage.setItem('surveyEmail', '');
             sessionStorage.setItem('surveyProgramme', selectedProgramme);
             sessionStorage.setItem('surveySection', selectedSection);
             
