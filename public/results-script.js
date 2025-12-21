@@ -298,13 +298,39 @@ function setLanguage(lang) {
 // Load Analytics
 async function loadAnalytics() {
     try {
-        const res = await fetch('/api/results');
+        // Build URL with current filters
+        let url = '/api/results';
+        const params = [];
+        if (currentFilter.programme) params.push(`programme=${encodeURIComponent(currentFilter.programme)}`);
+        if (currentFilter.section) params.push(`section=${encodeURIComponent(currentFilter.section)}`);
+        if (params.length > 0) url += `?${params.join('&')}`;
+        
+        const res = await fetch(url);
         const data = await res.json();
         
         if (data.length === 0) {
-            alert(currentLang === 'ar' ? 'لا توجد بيانات بعد' : 
-                  currentLang === 'fr' ? 'Aucune donnée disponible' : 
-                  'No data available');
+            // Display message for no data
+            document.getElementById('total-responses').innerText = '0';
+            document.getElementById('avg-satisfaction').innerText = '0%';
+            document.getElementById('top-rating').innerText = '-';
+            
+            // Clear chart
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+            
+            const noDataMsg = currentLang === 'ar' ? 'لا توجد بيانات للعرض' : 
+                  currentLang === 'fr' ? 'Aucune donnée à afficher' : 
+                  'No data to display';
+            
+            const ctx = document.getElementById('resultsChart').getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.font = '20px Cairo';
+            ctx.fillStyle = '#999';
+            ctx.textAlign = 'center';
+            ctx.fillText(noDataMsg, ctx.canvas.width / 2, ctx.canvas.height / 2);
+            
             return;
         }
 
@@ -924,7 +950,8 @@ function applyFilter() {
         exportInfo.style.display = 'none';
     }
     
-    loadResults();
+    // Reload analytics with new filters
+    loadAnalytics();
 }
 
 // Initialize filters on page load (extend existing DOMContentLoaded)

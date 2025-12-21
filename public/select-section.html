@@ -277,7 +277,6 @@
                     id="parent-email" 
                     class="email-input" 
                     placeholder="example@email.com"
-                    required
                 >
             </div>
             
@@ -435,33 +434,38 @@
             // Show email section
             document.getElementById('email-section').classList.add('show');
             document.getElementById('email-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Update continue button state
+            updateContinueButton();
         }
         
         // Enable continue button when email is valid
         document.getElementById('parent-email').addEventListener('input', function(e) {
-            const email = e.target.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            updateContinueButton();
+        });
+        
+        function updateContinueButton() {
             const continueBtn = document.getElementById('continue-btn');
-            
-            if (emailRegex.test(email) && selectedProgramme && selectedSection) {
+            // Email is now optional, only programme and section are required
+            if (selectedProgramme && selectedSection) {
                 continueBtn.disabled = false;
             } else {
                 continueBtn.disabled = true;
             }
-        });
+        }
         
         function continueToSurvey() {
             const email = document.getElementById('parent-email').value;
             
-            if (!email || !selectedProgramme || !selectedSection) {
-                alert(currentLang === 'ar' ? 'الرجاء إكمال جميع الخطوات' : 
-                      currentLang === 'fr' ? 'Veuillez compléter toutes les étapes' : 
-                      'Please complete all steps');
+            if (!selectedProgramme || !selectedSection) {
+                alert(currentLang === 'ar' ? 'الرجاء اختيار البرنامج والقسم' : 
+                      currentLang === 'fr' ? 'Veuillez sélectionner le programme et la section' : 
+                      'Please select program and section');
                 return;
             }
             
-            // Save to sessionStorage
-            sessionStorage.setItem('surveyEmail', email);
+            // Save to sessionStorage (email is optional)
+            sessionStorage.setItem('surveyEmail', email || '');
             sessionStorage.setItem('surveyProgramme', selectedProgramme);
             sessionStorage.setItem('surveySection', selectedSection);
             
