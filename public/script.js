@@ -362,7 +362,8 @@ function checkSession() {
     const programme = sessionStorage.getItem('surveyProgramme');
     const section = sessionStorage.getItem('surveySection');
     
-    if (!email || !programme || !section) {
+    // Email is now optional, only check programme and section
+    if (!programme || !section) {
         // Redirect to selection page
         window.location.href = 'select-section.html';
         return false;
@@ -373,7 +374,12 @@ function checkSession() {
     document.getElementById('section-info').style.display = 'block';
     document.getElementById('selected-programme').innerText = t.programmes[programme] || programme;
     document.getElementById('selected-section').innerText = t.sections[section] || section;
-    document.getElementById('selected-email').innerText = email;
+    // Only display email if it exists
+    if (email) {
+        document.getElementById('selected-email').innerText = email;
+    } else {
+        document.getElementById('selected-email').style.display = 'none';
+    }
     
     return true;
 }
@@ -383,7 +389,8 @@ const email = sessionStorage.getItem('surveyEmail');
 const programme = sessionStorage.getItem('surveyProgramme');
 const section = sessionStorage.getItem('surveySection');
 
-if (!email || !programme || !section) {
+// Email is optional, only check programme and section
+if (!programme || !section) {
     // Redirect immediately before any initialization
     window.location.href = 'select-section.html';
 } else {
