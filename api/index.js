@@ -24,9 +24,10 @@ mongoose.connect(MONGODB_URI, {
 const SurveySchema = new mongoose.Schema({
     parentEmail: {
         type: String,
-        required: true,
+        required: false,  // Email is now optional
         trim: true,
-        lowercase: true
+        lowercase: true,
+        default: ''
     },
     programme: {
         type: String,
@@ -90,21 +91,23 @@ app.post('/api/submit', async (req, res) => {
     try {
         const { parentEmail, programme, section, parentName, studentName, phone, answers, suggestions, comments } = req.body;
 
-        // Validation
-        if (!parentEmail || !programme || !section || !parentName || !studentName || !phone || !answers) {
+        // Validation - parentEmail is now optional
+        if (!programme || !section || !parentName || !studentName || !phone || !answers) {
             return res.status(400).json({
                 error: 'Missing required fields',
                 message: 'الرجاء ملء جميع الحقول المطلوبة'
             });
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(parentEmail)) {
-            return res.status(400).json({
-                error: 'Invalid email',
-                message: 'البريد الإلكتروني غير صحيح'
-            });
+        // Validate email format only if email is provided
+        if (parentEmail) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(parentEmail)) {
+                return res.status(400).json({
+                    error: 'Invalid email',
+                    message: 'البريد الإلكتروني غير صحيح'
+                });
+            }
         }
 
         // Validate programme
@@ -129,7 +132,7 @@ app.post('/api/submit', async (req, res) => {
 
         // Create new survey entry
         const newSurvey = new Survey({
-            parentEmail: parentEmail.toLowerCase(),
+            parentEmail: parentEmail ? parentEmail.toLowerCase() : '',
             programme: programme.toLowerCase(),
             section,
             parentName,
